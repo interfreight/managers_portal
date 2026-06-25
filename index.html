@@ -23,7 +23,6 @@ font-family:'Segoe UI',sans-serif;
 
 body{
 background:#f4f7fb;
-display:flex;
 min-height:100vh;
 }
 
@@ -84,8 +83,9 @@ font-weight:bold;
 /* MAIN */
 
 .main{
-flex:1;
-padding:35px;
+max-width:1600px;
+margin:auto;
+padding:30px;
 }
 
 /* HEADER */
@@ -107,14 +107,17 @@ color:#777;
 font-size:15px;
 }
 .profile-card{
-background:white;
-border-radius:25px;
-padding:30px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-margin-bottom:25px;
+
+background:
+linear-gradient(
+135deg,
+#ffffff,
+#f8fafc
+);
+
+border-left:
+6px solid #F4C542;
+
 }
 
 .profile-left{
@@ -172,9 +175,9 @@ color:#003366;
 .stats{
 display:grid;
 grid-template-columns:
-repeat(auto-fit,minmax(240px,1fr));
+repeat(4,1fr);
 gap:20px;
-margin-bottom:30px;
+margin-bottom:25px;
 }
 
 .stat-card{
@@ -187,16 +190,21 @@ position:relative;
 overflow:hidden;
 }
 
-.stat-card::before{
-content:'';
-position:absolute;
-top:0;
-left:0;
-width:6px;
-height:100%;
-background:#F4C542;
-}
+.stat-card{
 
+background:white;
+
+border-top:
+5px solid #F4C542;
+
+}
+.stat-card:hover{
+
+transform:translateY(-4px);
+
+transition:.3s;
+
+}
 .stat-card h4{
 color:#777;
 font-size:15px;
@@ -359,7 +367,27 @@ font-weight:bold;
 margin-right:10px;
 margin-top:10px;
 }
+.header{
+background:white;
+padding:25px 30px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+margin-bottom:25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
 
+.header h1{
+font-size:34px;
+color:#003366;
+margin-bottom:5px;
+}
+
+.manager-name{
+color:#666;
+font-size:15px;
+}
 .btn-approve{
 background:#28a745;
 color:white;
@@ -378,7 +406,82 @@ padding:12px 18px;
 border-radius:10px;
 cursor:pointer;
 }
+.hero-banner{
 
+background:
+linear-gradient(
+135deg,
+#003366,
+#004b99
+);
+
+border-radius:25px;
+
+padding:25px 35px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+margin-bottom:25px;
+
+box-shadow:
+0 15px 40px rgba(0,51,102,.25);
+
+color:white;
+
+}
+
+.hero-left{
+
+display:flex;
+align-items:center;
+gap:20px;
+
+}
+
+.hero-logo{
+
+width:90px;
+height:90px;
+object-fit:contain;
+
+background:white;
+padding:10px;
+
+border-radius:18px;
+
+}
+
+.hero-banner h1{
+
+font-size:34px;
+margin-bottom:8px;
+
+}
+
+.hero-banner p{
+
+opacity:.9;
+
+}
+
+.logout-btn{
+
+background:#F4C542;
+color:#003366;
+
+font-weight:bold;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:12px;
+
+cursor:pointer;
+
+}
 /* RESPONSIVE */
 
 @media(max-width:768px){
@@ -403,46 +506,26 @@ padding:20px;
 
 <body>
 
-<div class="sidebar">
-
-    <div class="logo">
-        <img src="3. INTERFREIGHT COMPANY LOGO.png">
-        <h2>INTERFREIGHT</h2>
-    </div>
-
-    <div class="menu">
-
-        <a href="#" class="active">
-            Dashboard
-        </a>
-
-        <a href="#">
-            Leave Approvals
-        </a>
-
-        <a href="#">
-            Reports
-        </a>
-
-    </div>
-
-</div>
-
 <div class="main">
 
 
+<div class="hero-banner">
 
-<div class="header">
+    <div class="hero-left">
 
-    <div>
+        <img
+        src="3. INTERFREIGHT COMPANY LOGO.png"
+        class="hero-logo">
 
-        <h1>Managers Portal</h1>
+        <div>
 
-        <div
-        class="manager-name"
-        id="managerInfo">
+            <h1>
+                INTERFREIGHT Managers Portal
+            </h1>
 
-            Loading...
+            <p id="managerInfo">
+                Loading...
+            </p>
 
         </div>
 
@@ -457,8 +540,6 @@ padding:20px;
     </button>
 
 </div>
-
-
 <!-- MANAGER PROFILE CARD -->
 
 <div class="profile-card">
