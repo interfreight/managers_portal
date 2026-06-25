@@ -262,7 +262,6 @@ padding:20px;
 
 <body>
 
-<div class="sidebar">
 
 ```
 <div class="logo">
@@ -289,7 +288,6 @@ padding:20px;
 
 </div>
 
-<div class="main">
 
 ```
 <!-- HEADER -->
@@ -401,6 +399,12 @@ padding:20px;
 
 </div>
 
+<script>
+
+    const db = window.supabase.createClient(
+"https://tuihpvykuqbqnfyfepql.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1aWhwdnlrdXFicW5meWZlcHFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3Mjg4OTcsImV4cCI6MjA5NzMwNDg5N30.HZKS8CgFLjkZ-Bx2AIjFjurH3IsKjvf37Ft852CzJsQ"
+);
 const currentUser =
 JSON.parse(localStorage.getItem("currentUser"));
 
@@ -813,3 +817,7 @@ loadDashboard();
 
 loadDashboard();
 ```
+</script>
+
+</body>
+</html>
