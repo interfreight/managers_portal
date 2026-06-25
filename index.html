@@ -106,7 +106,67 @@ font-size:32px;
 color:#777;
 font-size:15px;
 }
+.profile-card{
+background:white;
+border-radius:25px;
+padding:30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+margin-bottom:25px;
+}
 
+.profile-left{
+display:flex;
+align-items:center;
+gap:25px;
+}
+
+.profile-photo{
+width:110px;
+height:110px;
+border-radius:50%;
+object-fit:cover;
+border:5px solid #F4C542;
+}
+
+.profile-left h2{
+color:#003366;
+font-size:28px;
+margin-bottom:8px;
+}
+
+.profile-left div{
+color:#666;
+font-size:15px;
+line-height:1.8;
+}
+
+.profile-right{
+display:flex;
+gap:20px;
+}
+
+.info-box{
+background:#f8fafc;
+padding:15px 25px;
+border-radius:15px;
+text-align:center;
+min-width:140px;
+}
+
+.info-box span{
+display:block;
+font-size:13px;
+color:#777;
+margin-bottom:5px;
+}
+
+.info-box strong{
+font-size:20px;
+color:#003366;
+}
 /* DASHBOARD CARDS */
 
 .stats{
@@ -150,7 +210,21 @@ color:#003366;
 }
 
 /* LEAVE REQUESTS */
+.leave-form{
+display:grid;
+gap:15px;
+}
 
+.leave-form input,
+.leave-form select,
+.leave-form textarea{
+
+padding:12px;
+border:1px solid #ddd;
+border-radius:10px;
+font-size:14px;
+
+}
 .card{
 background:white;
 padding:25px;
@@ -379,7 +453,54 @@ Role:
 </div>
 
 </div>
+<!-- MANAGER PROFILE CARD -->
 
+<div class="profile-card">
+
+    <div class="profile-left">
+
+        <img
+        id="managerPhoto"
+        src="default-avatar.png"
+        class="profile-photo">
+
+        <div>
+
+            <h2 id="profileName">
+                Loading...
+            </h2>
+
+            <div id="profileRole">
+                Loading role...
+            </div>
+
+            <div id="profileDepartment">
+                Loading department...
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="profile-right">
+
+        <div class="info-box">
+            <span>Employee ID</span>
+            <strong id="profileEmpID">-</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Status</span>
+            <strong>Active</strong>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- DASHBOARD CARDS -->
+
+<div class="stats">
 <div class="stats">
 
     <div class="stat-card">
@@ -440,8 +561,48 @@ Role:
 
 </div>
 
-<!-- LEAVE REQUESTS -->
+<div class="card">
 
+<h3>File Leave Request</h3>
+
+<div class="leave-form">
+
+<label>Leave Type</label>
+<select id="leaveType">
+
+<option>Vacation Leave</option>
+<option>Sick Leave</option>
+<option>Emergency Leave</option>
+<option>Birthday Leave</option>
+<option>Maternity Leave</option>
+<option>Paternity Leave</option>
+<option>Study Leave</option>
+
+</select>
+
+<label>Date From</label>
+<input type="date" id="dateFrom">
+
+<label>Date To</label>
+<input type="date" id="dateTo">
+
+<label>Reason</label>
+<textarea
+id="reason"
+rows="4">
+</textarea>
+
+<button
+class="btn btn-approve"
+onclick="submitLeave()">
+
+Submit Leave Request
+
+</button>
+
+</div>
+
+</div>
 <div class="card">
 
     <h3>
@@ -459,6 +620,100 @@ Role:
 </div>
 
 <script>
+    async function submitLeave(){
+
+const leaveType =
+document.getElementById("leaveType").value;
+
+const dateFrom =
+document.getElementById("dateFrom").value;
+
+const dateTo =
+document.getElementById("dateTo").value;
+
+const reason =
+document.getElementById("reason").value;
+
+if(
+!leaveType ||
+!dateFrom ||
+!dateTo
+){
+alert("Please complete all fields.");
+return;
+}
+
+const from =
+new Date(dateFrom);
+
+const to =
+new Date(dateTo);
+
+const totalDays =
+Math.floor(
+(to - from) /
+(1000*60*60*24)
+) + 1;
+
+const { data: profile } =
+await db
+.from("employee_profiles")
+.select("*")
+.eq("user_id", currentUser.id)
+.single();
+
+const { error } =
+await db
+.from("employee_leaves")
+.insert([{
+
+user_id:
+currentUser.id,
+
+employee_name:
+profile.full_name,
+
+department:
+profile.department,
+
+leave_type:
+leaveType,
+
+date_from:
+dateFrom,
+
+date_to:
+dateTo,
+
+total_days:
+totalDays,
+
+reason:
+reason,
+
+status:"Pending",
+
+approved_by:null,
+
+deducted:false
+
+}]);
+
+if(error){
+
+alert(error.message);
+return;
+
+}
+
+alert(
+"Leave request submitted successfully."
+);
+
+loadDashboard();
+
+}
+    
 async function loadManagerProfile(){
 
 const { data: profile } =
@@ -550,7 +805,37 @@ return null;
 }
 
 /* LOAD DASHBOARD */
+async function loadManagerProfile(){
 
+const { data } =
+await db
+.from("employee_profiles")
+.select("*")
+.eq("user_id", currentUser.id)
+.single();
+
+if(!data) return;
+
+document.getElementById("profileName").textContent =
+data.full_name || currentUser.full_name;
+
+document.getElementById("profileRole").textContent =
+currentUser.role;
+
+document.getElementById("profileDepartment").textContent =
+data.department || "-";
+
+document.getElementById("profileEmpID").textContent =
+data.employee_id || "-";
+
+if(data.photo_url){
+
+document.getElementById("managerPhoto").src =
+data.photo_url;
+
+}
+
+}
 async function loadDashboard(){
 
 await loadStats();
