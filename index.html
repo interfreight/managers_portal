@@ -924,41 +924,47 @@ alert(
 "Leave request submitted successfully."
 );
 
+loadManagerProfile();
 loadDashboard();
 
 }
     
 async function loadManagerProfile(){
 
-const { data: profile } =
+const { data: profile, error } =
 await db
 .from("employee_profiles")
 .select("*")
 .eq("user_id", currentUser.id)
 .single();
 
-if(!profile) return;
-
-document.getElementById("profilePhoto").src =
-profile.profile_photo ||
-"https://cdn-icons-png.flaticon.com/512/149/149071.png";
+console.log(profile);
+console.log(error);
 
 document.getElementById("profileName").textContent =
-currentUser.full_name;
+currentUser.full_name || "-";
 
 document.getElementById("profileRole").textContent =
-currentUser.role;
+currentUser.role || "-";
 
 document.getElementById("profileDepartment").textContent =
-currentUser.department;
+currentUser.department || "-";
+
+if(profile){
+
+document.getElementById("managerPhoto").src =
+profile.profile_photo ||
+"https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 document.getElementById("profileEmpID").textContent =
 profile.employee_id || "-";
 
-document.getElementById("position").textContent =
-profile.position || "-";
+}
 
 }
+    loadManagerProfile();
+loadDashboard();
+    
     const db = window.supabase.createClient(
 "https://tuihpvykuqbqnfyfepql.supabase.co",
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1aWhwdnlrdXFicW5meWZlcHFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3Mjg4OTcsImV4cCI6MjA5NzMwNDg5N30.HZKS8CgFLjkZ-Bx2AIjFjurH3IsKjvf37Ft852CzJsQ"
@@ -1378,6 +1384,7 @@ loadManagerProfile();
 loadDashboard();
 
 }
+loadManagerProfile();
 loadDashboard();
 </script>
 
