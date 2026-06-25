@@ -1,0 +1,815 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>INTERFREIGHT Managers Portal</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:#f4f7fb;
+display:flex;
+min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:270px;
+background:linear-gradient(
+180deg,
+#00264d,
+#003366
+);
+color:white;
+padding:25px;
+box-shadow:5px 0 20px rgba(0,0,0,.08);
+}
+
+.logo{
+text-align:center;
+margin-bottom:35px;
+}
+
+.logo img{
+width:130px;
+}
+
+.logo h2{
+margin-top:15px;
+font-size:22px;
+letter-spacing:1px;
+}
+
+.menu{
+margin-top:25px;
+}
+
+.menu a{
+display:block;
+padding:15px;
+margin-bottom:10px;
+border-radius:12px;
+text-decoration:none;
+color:white;
+transition:.3s;
+font-weight:500;
+}
+
+.menu a:hover{
+background:#1E5AA8;
+}
+
+.menu .active{
+background:#F4C542;
+color:#003366;
+font-weight:bold;
+}
+
+/* MAIN */
+
+.main{
+flex:1;
+padding:35px;
+}
+
+/* HEADER */
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.header h1{
+color:#003366;
+font-size:32px;
+}
+
+.manager-name{
+color:#777;
+font-size:15px;
+}
+
+/* DASHBOARD CARDS */
+
+.stats{
+display:grid;
+grid-template-columns:
+repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.stat-card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:
+0 10px 30px rgba(0,0,0,.08);
+position:relative;
+overflow:hidden;
+}
+
+.stat-card::before{
+content:'';
+position:absolute;
+top:0;
+left:0;
+width:6px;
+height:100%;
+background:#F4C542;
+}
+
+.stat-card h4{
+color:#777;
+font-size:15px;
+margin-bottom:10px;
+}
+
+.stat-card .number{
+font-size:42px;
+font-weight:bold;
+color:#003366;
+}
+
+/* LEAVE REQUESTS */
+
+.card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:
+0 10px 30px rgba(0,0,0,.08);
+margin-bottom:25px;
+}
+
+.card h3{
+color:#003366;
+margin-bottom:20px;
+}
+
+/* REQUEST ITEM */
+
+.request{
+border:1px solid #eee;
+padding:20px;
+border-radius:15px;
+margin-bottom:15px;
+transition:.3s;
+}
+
+.request:hover{
+box-shadow:
+0 5px 15px rgba(0,0,0,.06);
+}
+
+.request h4{
+color:#003366;
+margin-bottom:10px;
+}
+
+.request p{
+margin-bottom:6px;
+color:#555;
+}
+
+/* STATUS */
+
+.pending{
+color:#f0ad4e;
+font-weight:bold;
+}
+
+.approved{
+color:#28a745;
+font-weight:bold;
+}
+
+.rejected{
+color:#dc3545;
+font-weight:bold;
+}
+
+/* BUTTONS */
+
+.btn{
+border:none;
+padding:10px 18px;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+margin-right:10px;
+margin-top:10px;
+}
+
+.btn-approve{
+background:#28a745;
+color:white;
+}
+
+.btn-reject{
+background:#dc3545;
+color:white;
+}
+
+.logout-btn{
+background:#dc3545;
+color:white;
+border:none;
+padding:12px 18px;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+body{
+flex-direction:column;
+}
+
+.sidebar{
+width:100%;
+}
+
+.main{
+padding:20px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+```
+<div class="logo">
+    <img src="3. INTERFREIGHT COMPANY LOGO.png">
+    <h2>INTERFREIGHT</h2>
+</div>
+
+<div class="menu">
+
+    <a href="#" class="active">
+        Dashboard
+    </a>
+
+    <a href="#">
+        Leave Approvals
+    </a>
+
+    <a href="#">
+        Reports
+    </a>
+
+</div>
+```
+
+</div>
+
+<div class="main">
+
+```
+<!-- HEADER -->
+
+<div class="header">
+
+    <div>
+
+        <h1>Managers Portal</h1>
+
+        <div
+        class="manager-name"
+        id="managerInfo">
+
+            Loading...
+
+        </div>
+
+    </div>
+
+    <button
+    class="logout-btn"
+    onclick="logout()">
+
+        Logout
+
+    </button>
+
+</div>
+
+<!-- DASHBOARD CARDS -->
+
+<div class="stats">
+
+    <div class="stat-card">
+
+        <h4>Pending Requests</h4>
+
+        <div
+        class="number"
+        id="pendingCount">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h4>Approved Requests</h4>
+
+        <div
+        class="number"
+        id="approvedCount">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h4>Rejected Requests</h4>
+
+        <div
+        class="number"
+        id="rejectedCount">
+
+            0
+
+        </div>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h4>Total Requests</h4>
+
+        <div
+        class="number"
+        id="totalCount">
+
+            0
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- LEAVE REQUESTS -->
+
+<div class="card">
+
+    <h3>
+        Leave Approval Queue
+    </h3>
+
+    <div id="leaveQueue">
+
+        Loading leave requests...
+
+    </div>
+
+</div>
+```
+
+</div>
+
+const currentUser =
+JSON.parse(localStorage.getItem("currentUser"));
+
+if(!currentUser){
+
+window.location.href =
+"https://interfreight.github.io/login/";
+
+}
+
+function logout(){
+
+localStorage.removeItem("currentUser");
+
+window.location.href =
+"https://interfreight.github.io/login/";
+
+}
+
+document.getElementById("managerInfo").innerHTML =
+currentUser.full_name +
+" • " +
+currentUser.role;
+
+/* DETERMINE MANAGER DEPARTMENT */
+
+function getManagerDepartment(){
+
+switch(currentUser.role){
+
+case "Transport Manager":
+return "Transport";
+
+case "Operations Manager":
+return "Operations";
+
+case "Sales Manager":
+return "Sales";
+
+case "Accounting Manager":
+return "Accounting";
+
+case "Forwarding Manager":
+return "Forwarding";
+
+case "HR":
+return "ALL";
+
+default:
+return null;
+
+}
+
+}
+
+/* LOAD DASHBOARD */
+
+async function loadDashboard(){
+
+await loadStats();
+
+await loadLeaveQueue();
+
+}
+
+/* LOAD STATS */
+
+async function loadStats(){
+
+let query =
+db
+.from("employee_leaves")
+.select("*");
+
+const managerDept =
+getManagerDepartment();
+
+if(managerDept !== "ALL"){
+
+query =
+query.eq(
+"department",
+managerDept
+);
+
+}
+
+const { data } =
+await query;
+
+if(!data) return;
+
+document.getElementById("totalCount").textContent =
+data.length;
+
+document.getElementById("pendingCount").textContent =
+data.filter(
+x=>x.status==="Pending"
+).length;
+
+document.getElementById("approvedCount").textContent =
+data.filter(
+x=>x.status==="Approved"
+).length;
+
+document.getElementById("rejectedCount").textContent =
+data.filter(
+x=>x.status==="Rejected"
+).length;
+
+}
+
+/* LOAD LEAVE QUEUE */
+
+async function loadLeaveQueue(){
+
+const container =
+document.getElementById("leaveQueue");
+
+container.innerHTML =
+"Loading...";
+
+let query =
+db
+.from("employee_leaves")
+.select("*")
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+const managerDept =
+getManagerDepartment();
+
+if(managerDept !== "ALL"){
+
+query =
+query.eq(
+"department",
+managerDept
+);
+
+}
+
+const { data, error } =
+await query;
+
+if(error){
+
+container.innerHTML =
+error.message;
+
+return;
+
+}
+
+if(data.length===0){
+
+container.innerHTML =
+"No leave requests found.";
+
+return;
+
+}
+
+container.innerHTML = "";
+
+data.forEach(leave=>{
+
+let buttons = "";
+
+if(leave.status==="Pending"){
+
+buttons = `
+
+<button
+class="btn btn-approve"
+onclick="approveLeave(${leave.id})">
+
+Approve
+
+</button>
+
+<button
+class="btn btn-reject"
+onclick="rejectLeave(${leave.id})">
+
+Reject
+
+</button>
+
+`;
+
+}
+
+container.innerHTML += `
+
+<div class="request">
+
+<h4>
+
+${leave.employee_name}
+
+</h4>
+
+<p>
+Department:
+${leave.department}
+</p>
+
+<p>
+Leave:
+${leave.leave_type}
+</p>
+
+<p>
+${leave.date_from}
+to
+${leave.date_to}
+</p>
+
+<p>
+Days:
+${leave.total_days}
+</p>
+
+<p>
+Reason:
+${leave.reason}
+</p>
+
+<p>
+
+Status:
+
+<b>
+
+${leave.status}
+
+</b>
+
+</p>
+
+${buttons}
+
+</div>
+
+`;
+
+});
+
+}
+
+/* APPROVE */
+
+async function approveLeave(id){
+
+if(
+!confirm(
+"Approve this leave?"
+)
+){
+return;
+}
+
+const { data: leave } =
+await db
+.from("employee_leaves")
+.select("*")
+.eq("id", id)
+.single();
+
+if(!leave) return;
+
+await db
+.from("employee_leaves")
+.update({
+
+status:"Approved",
+
+approved_by:
+currentUser.full_name,
+
+approved_date:
+new Date().toISOString()
+
+})
+.eq("id",id);
+
+/* DEDUCT LEAVE ONCE */
+
+if(!leave.deducted){
+
+const { data: profile } =
+await db
+.from("employee_profiles")
+.select("*")
+.eq(
+"user_id",
+leave.user_id
+)
+.single();
+
+let field = "";
+
+switch(leave.leave_type){
+
+case "Vacation Leave":
+field = "vacation_leave";
+break;
+
+case "Sick Leave":
+field = "sick_leave";
+break;
+
+case "Emergency Leave":
+field = "emergency_leave";
+break;
+
+case "Birthday Leave":
+field = "birthday_leave";
+break;
+
+case "Maternity Leave":
+field = "maternity_leave";
+break;
+
+case "Paternity Leave":
+field = "paternity_leave";
+break;
+
+case "Study Leave":
+field = "study_leave";
+break;
+
+}
+
+if(field){
+
+const current =
+profile[field] || 0;
+
+const remaining =
+Math.max(
+0,
+current - leave.total_days
+);
+
+await db
+.from("employee_profiles")
+.update({
+
+[field]: remaining
+
+})
+.eq(
+"user_id",
+leave.user_id
+);
+
+}
+
+await db
+.from("employee_leaves")
+.update({
+
+deducted:true
+
+})
+.eq("id",id);
+
+}
+
+loadDashboard();
+
+}
+
+/* REJECT */
+
+async function rejectLeave(id){
+
+if(
+!confirm(
+"Reject this leave?"
+)
+){
+return;
+}
+
+await db
+.from("employee_leaves")
+.update({
+
+status:"Rejected",
+
+approved_by:
+currentUser.full_name,
+
+approved_date:
+new Date().toISOString()
+
+})
+.eq("id",id);
+
+loadDashboard();
+
+}
+
+loadDashboard();
+```
