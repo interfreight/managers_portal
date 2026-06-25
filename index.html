@@ -164,7 +164,35 @@ font-size:13px;
 color:#777;
 margin-bottom:5px;
 }
+.leave-form{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
 
+.leave-form label{
+font-size:14px;
+font-weight:600;
+color:#003366;
+}
+
+.leave-form input,
+.leave-form select,
+.leave-form textarea{
+
+width:100%;
+padding:14px;
+border:1px solid #d9e2ec;
+border-radius:12px;
+font-size:14px;
+background:white;
+
+}
+
+.leave-form textarea{
+resize:none;
+min-height:120px;
+}
 .info-box strong{
 font-size:20px;
 color:#003366;
@@ -635,13 +663,12 @@ padding:20px;
 
 <div class="profile-card">
 
-    <div class="profile-left">
+   <div class="profile-left">
 
-        <img
-      <img
-id="managerPhoto"
-src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-class="profile-photo">
+    <img
+        id="managerPhoto"
+        src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+        class="profile-photo">
 
         <div class="profile-details">
 
@@ -752,59 +779,59 @@ class="profile-photo">
 
         <h3>File Leave Request</h3>
 
-<div class="leave-form">
+        <div class="leave-form">
+
+            <label>Leave Type</label>
+
+            <select id="leaveType">
+                <option>Vacation Leave</option>
+                <option>Sick Leave</option>
+                <option>Emergency Leave</option>
+                <option>Birthday Leave</option>
+                <option>Maternity Leave</option>
+                <option>Paternity Leave</option>
+                <option>Study Leave</option>
+            </select>
+
+            <label>Date From</label>
+            <input type="date" id="dateFrom">
+
+            <label>Date To</label>
+            <input type="date" id="dateTo">
+
+            <label>Reason</label>
+
+            <textarea
+                id="reason"
+                rows="5"
+                placeholder="Enter reason for leave">
+            </textarea>
+
+            <button
+                class="btn btn-approve"
+                onclick="submitLeave()">
+
+                Submit Leave Request
+
+            </button>
+
+        </div>
+
     </div>
-</div>
- <div class="card">
+
+    <div class="card">
 
         <h3>Leave Approval Queue</h3>
 
         <div id="leaveQueue">
 
-        Loading leave requests...
+            Loading leave requests...
+
+        </div>
 
     </div>
 
 </div>
-</div>
-
-<label>Leave Type</label>
-<select id="leaveType">
-
-<option>Vacation Leave</option>
-<option>Sick Leave</option>
-<option>Emergency Leave</option>
-<option>Birthday Leave</option>
-<option>Maternity Leave</option>
-<option>Paternity Leave</option>
-<option>Study Leave</option>
-
-</select>
-
-<label>Date From</label>
-<input type="date" id="dateFrom">
-
-<label>Date To</label>
-<input type="date" id="dateTo">
-
-<label>Reason</label>
-<textarea
-id="reason"
-rows="4">
-</textarea>
-
-<button
-class="btn btn-approve"
-onclick="submitLeave()">
-
-Submit Leave Request
-
-</button>
-
-</div>
-  </div>
-</div>
-
 
 <script>
     async function submitLeave(){
@@ -916,17 +943,17 @@ document.getElementById("profilePhoto").src =
 profile.profile_photo ||
 "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
-document.getElementById("fullName").textContent =
+document.getElementById("profileName").textContent =
 currentUser.full_name;
 
-document.getElementById("email").textContent =
-currentUser.email;
+document.getElementById("profileRole").textContent =
+currentUser.role;
 
-document.getElementById("department").textContent =
+document.getElementById("profileDepartment").textContent =
 currentUser.department;
 
-document.getElementById("role").textContent =
-currentUser.role;
+document.getElementById("profileEmpID").textContent =
+profile.employee_id || "-";
 
 document.getElementById("position").textContent =
 profile.position || "-";
@@ -1193,6 +1220,7 @@ container.innerHTML += `
 </div>
 
 `;
+    });
 /* APPROVE */
 
 async function approveLeave(id){
