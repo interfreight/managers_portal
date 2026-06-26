@@ -996,28 +996,30 @@ currentUser.role;
 
 function getManagerDepartment(){
 
-switch(currentUser.role){
+const role = currentUser.role.toUpperCase();
 
-case "Transport Manager":
-return "Transport";
+switch(role){
 
-case "Operations Manager":
-return "Operations";
+case "TRANSPORT MANAGER":
+    return "Transport";
 
-case "Sales Manager":
-return "Sales";
+case "OPERATIONS MANAGER":
+    return "Operations";
 
-case "Accounting Manager":
-return "Accounting";
+case "SALES MANAGER":
+    return "Sales";
 
-case "Forwarding Manager":
-return "Forwarding";
+case "ACCOUNTING MANAGER":
+    return "Accounting";
+
+case "FORWARDING MANAGER":
+    return "Forwarding";
 
 case "HR":
-return "ALL";
+    return "ALL";
 
 default:
-return null;
+    return null;
 
 }
 
