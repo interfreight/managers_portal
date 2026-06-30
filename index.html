@@ -1173,7 +1173,9 @@ profile.employee_id || "-";
 );
 const currentUser =
 JSON.parse(localStorage.getItem("currentUser"));
-
+console.log(currentUser);
+console.log("Role:", currentUser.role);
+console.log("Department:", currentUser.department);
 if(!currentUser){
 
 window.location.href =
