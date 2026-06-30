@@ -1039,6 +1039,46 @@ await db
 .eq("user_id", currentUser.id)
 .single();
 
+        let approverRole = "";
+
+const role = currentUser.role.toUpperCase();
+
+if(role === "USER"){
+
+    switch(currentUser.department){
+
+        case "Accounting":
+            approverRole = "ACCOUNTING MANAGER";
+            break;
+
+        case "Operations":
+            approverRole = "OPERATIONS MANAGER";
+            break;
+
+        case "Sales":
+            approverRole = "SALES MANAGER";
+            break;
+
+        case "Transport":
+            approverRole = "TRANSPORT MANAGER";
+            break;
+
+        case "Forwarding":
+            approverRole = "FORWARDING MANAGER";
+            break;
+
+        case "HR":
+            approverRole = "HR";
+            break;
+
+    }
+
+}else{
+
+    approverRole = "PRESIDENT";
+
+}
+        
 const { error } =
 await db
 .from("employee_leaves")
@@ -1053,9 +1093,9 @@ currentUser.full_name,
 department:
 currentUser.department,
 
-requester_role:
-currentUser.role,
-    
+approver_role:
+approverRole,
+
 leave_type:
 leaveType,
 
@@ -1205,43 +1245,35 @@ db
 .from("employee_leaves")
 .select("*");
 
-const managerDept =
-getManagerDepartment();
-
-if(managerDept !== "ALL"){
-
 query =
-query
-.eq("department",managerDept)
-.eq("requester_role","User");
+query.eq(
+"approver_role",
+currentUser.role.toUpperCase()
+);
 
-}
-
-const { data } =
+const { data,error } =
 await query;
 
-if(!data) return;
+if(error){
+
+console.log(error);
+return;
+
+}
 
 document.getElementById("totalCount").textContent =
 data.length;
 
 document.getElementById("pendingCount").textContent =
-data.filter(
-x=>x.status==="Pending"
-).length;
+data.filter(x=>x.status==="Pending").length;
 
 document.getElementById("approvedCount").textContent =
-data.filter(
-x=>x.status==="Approved"
-).length;
+data.filter(x=>x.status==="Approved").length;
 
 document.getElementById("rejectedCount").textContent =
-data.filter(
-x=>x.status==="Rejected"
-).length;
+data.filter(x=>x.status==="Rejected").length;
 
 }
-
 /* LOAD LEAVE QUEUE */
 
 async function loadLeaveQueue(){
@@ -1263,20 +1295,13 @@ ascending:false
 }
 );
 
-const managerDept =
-getManagerDepartment();
-
-if(managerDept !== "ALL"){
-
 query =
-query
-.eq("department",managerDept)
-.eq("requester_role","User");
+query.eq(
+"approver_role",
+currentUser.role.toUpperCase()
+);
 
-}
-
-const { data, error } =
-await query;
+const { data, error } = await query;
 
 if(error){
 
@@ -1427,6 +1452,7 @@ new Date().toISOString()
 })
 .eq("id",id);
 
+    loadDashboard();
 /* DEDUCT LEAVE ONCE */
 
 if(!leave.deducted){
@@ -1539,7 +1565,6 @@ new Date().toISOString()
 })
 .eq("id",id);
 
-loadManagerProfile();
 loadDashboard();
 
 }
