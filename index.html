@@ -1302,7 +1302,11 @@ currentUser.role.toUpperCase()
 );
 
 const { data, error } = await query;
-
+console.log("Current User:", currentUser);
+console.log("Looking for approver_role:", currentUser.role.toUpperCase());
+console.log("Returned rows:", data);
+console.log("Error:", error);
+    
 if(error){
 
 container.innerHTML =
