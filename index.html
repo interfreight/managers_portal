@@ -260,6 +260,50 @@ border-radius:10px;
 font-size:14px;
 
 }
+    .quick-actions{
+
+display:flex;
+gap:20px;
+margin-top:15px;
+
+}
+
+.action-btn{
+
+flex:1;
+
+background:#003366;
+
+color:white;
+
+padding:30px;
+
+text-align:center;
+
+text-decoration:none;
+
+font-size:20px;
+
+font-weight:bold;
+
+border-radius:18px;
+
+transition:.3s;
+
+box-shadow:0 10px 20px rgba(0,0,0,.1);
+
+}
+
+.action-btn:hover{
+
+background:#F4C542;
+
+color:#003366;
+
+transform:translateY(-5px);
+
+}
+    
 .card{
 background:white;
 padding:25px;
@@ -713,7 +757,31 @@ padding:20px;
 <!-- DASHBOARD CARDS -->
 
 <div class="stats">
+<div class="card">
 
+<h3>Quick Actions</h3>
+
+<div class="quick-actions">
+
+<a href="https://interfreight.github.io/manager_My_leave_history/" class="action-btn">
+
+📄
+<br><br>
+My Leave History
+
+</a>
+
+<a href="https://interfreight.github.io/manager_leave_history/" class="action-btn">
+
+👥
+<br><br>
+Employee Leave History
+
+</a>
+
+</div>
+
+</div>
 
     <div class="stat-card">
 
@@ -890,6 +958,9 @@ currentUser.full_name,
 department:
 currentUser.department,
 
+requester_role:
+currentUser.role,
+    
 leave_type:
 leaveType,
 
@@ -1045,10 +1116,9 @@ getManagerDepartment();
 if(managerDept !== "ALL"){
 
 query =
-query.eq(
-"department",
-managerDept
-);
+query
+.eq("department",managerDept)
+.eq("requester_role","User");
 
 }
 
@@ -1104,10 +1174,9 @@ getManagerDepartment();
 if(managerDept !== "ALL"){
 
 query =
-query.eq(
-"department",
-managerDept
-);
+query
+.eq("department",managerDept)
+.eq("requester_role","User");
 
 }
 
