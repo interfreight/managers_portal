@@ -293,7 +293,69 @@ transition:.3s;
 box-shadow:0 10px 20px rgba(0,0,0,.1);
 
 }
+.navigation-card{
 
+margin-bottom:25px;
+
+}
+
+.quick-actions{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:20px;
+
+margin-top:15px;
+
+}
+
+.action-btn{
+
+display:flex;
+
+align-items:center;
+
+gap:20px;
+
+padding:25px;
+
+background:linear-gradient(135deg,#003366,#004d99);
+
+color:white;
+
+text-decoration:none;
+
+border-radius:18px;
+
+transition:.3s;
+
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+
+}
+
+.action-btn:hover{
+
+transform:translateY(-4px);
+
+background:linear-gradient(135deg,#004d99,#0066cc);
+
+}
+
+.action-btn .icon{
+
+font-size:42px;
+
+}
+
+.action-btn span:last-child{
+
+font-size:22px;
+
+font-weight:bold;
+
+}
 .action-btn:hover{
 
 background:#F4C542;
@@ -532,8 +594,10 @@ margin-bottom:5px;
 }
 #leaveQueue{
 
-max-height:650px;
+height:720px;
+
 overflow-y:auto;
+
 padding-right:10px;
 
 }
@@ -609,7 +673,7 @@ border-radius:18px;
 
 display:grid;
 
-grid-template-columns:340px 1fr;
+grid-template-columns:1fr 2fr;
 
 gap:25px;
 
@@ -756,26 +820,27 @@ padding:20px;
 
 <!-- DASHBOARD CARDS -->
 
-<div class="stats">
-<div class="card">
+<div class="card navigation-card">
 
 <h3>Quick Actions</h3>
 
 <div class="quick-actions">
 
-<a href="https://interfreight.github.io/manager_My_leave_history/" class="action-btn">
+<a href="https://interfreight.github.io/manager_my_leave_history/"
+class="action-btn">
 
-📄
-<br><br>
-My Leave History
+<span class="icon">📄</span>
+
+<span>My Leave History</span>
 
 </a>
 
-<a href="https://interfreight.github.io/manager_leave_history/" class="action-btn">
+<a href="https://interfreight.github.io/manager_leave_history/"
+class="action-btn">
 
-👥
-<br><br>
-Employee Leave History
+<span class="icon">👥</span>
+
+<span>Employee Leave History</span>
 
 </a>
 
