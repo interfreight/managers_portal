@@ -993,7 +993,17 @@ Approved & rejected employee leaves
         </div>
 
     </div>
+<div class="card">
 
+    <h3>Overtime Approval Queue</h3>
+
+    <div id="overtimeQueue">
+
+        Loading overtime requests...
+
+    </div>
+
+</div>
 </div>
 
 <script>
@@ -1232,9 +1242,11 @@ default:
 
 async function loadDashboard(){
 
-await loadStats();
+    await loadStats();
 
-await loadLeaveQueue();
+    await loadLeaveQueue();
+
+    await loadOvertimeQueue();
 
 }
 
@@ -1423,7 +1435,217 @@ container.innerHTML += `
 
 } // closes loadLeaveQueue
 /* APPROVE */
+async function loadOvertimeQueue(){
 
+    const container =
+    document.getElementById("overtimeQueue");
+
+    container.innerHTML = "Loading...";
+
+    const { data, error } =
+    await db
+    .from("employee_overtime")
+    .select("*")
+    .eq(
+        "approver_role",
+        currentUser.role.toUpperCase()
+    )
+    .order("created_at",{ascending:false});
+
+    if(error){
+
+        container.innerHTML = error.message;
+
+        return;
+
+    }
+
+    if(data.length===0){
+
+        container.innerHTML =
+        "No overtime requests.";
+
+        return;
+
+    }
+
+    container.innerHTML="";
+
+    data.forEach(ot=>{
+
+        let buttons="";
+
+        if(ot.department_status==="Pending"){
+
+            buttons=`
+
+<button
+class="btn btn-approve"
+onclick="approveOT('${ot.id}')">
+
+Approve
+
+</button>
+
+<button
+class="btn btn-reject"
+onclick="rejectOT('${ot.id}')">
+
+Decline
+
+</button>
+
+`;
+
+        }
+
+        container.innerHTML += `
+
+<div class="request">
+
+<div class="request-header">
+
+<div>
+
+<div class="request-name">
+
+${ot.employee_name}
+
+</div>
+
+<div class="request-subtitle">
+
+${ot.department} • ${ot.position}
+
+</div>
+
+</div>
+
+<span class="status-badge ${ot.department_status.toLowerCase()}">
+
+    ${ot.department_status}
+
+</span>
+
+</div>
+
+<div class="request-grid">
+
+<div>
+
+<span class="request-label">
+
+Date
+
+</span>
+
+<strong>
+
+${ot.overtime_date} → ${ot.overtime_end_date}
+
+</strong>
+
+</div>
+
+<div>
+
+<span class="request-label">
+
+Hours
+
+</span>
+
+<strong>
+
+${ot.total_hours}
+
+</strong>
+
+</div>
+
+<div>
+
+<span class="request-label">
+
+Time In
+
+</span>
+
+<strong>
+
+${ot.time_in}
+
+</strong>
+
+</div>
+
+<div>
+
+<span class="request-label">
+
+Time Out
+
+</span>
+
+<strong>
+
+${ot.time_out}
+
+</strong>
+
+</div>
+
+<div class="reason-box">
+
+<span class="request-label">
+
+Reason
+
+</span>
+
+<p>
+
+${ot.reason}
+
+</p>
+
+</div>
+<div>
+
+<span class="request-label">
+
+Attachment
+
+</span>
+
+<strong>
+
+${
+ot.attachment
+?
+`<a href="${ot.attachment}" target="_blank">View Attachment</a>`
+:
+"No Attachment"
+}
+
+</strong>
+
+</div>
+</div>
+
+<div class="request-actions">
+
+${buttons}
+
+</div>
+
+</div>
+
+`;
+
+    });
+
+}
 async function approveLeave(id){
 
 if(
@@ -1443,20 +1665,19 @@ await db
 
 if(!leave) return;
 
-await db
+const { error } = await db
 .from("employee_leaves")
 .update({
-
-status:"Approved",
-
-approved_by:
-currentUser.full_name,
-
-approved_date:
-new Date().toISOString()
-
+    status:"Approved",
+    approved_by:currentUser.full_name,
+    approved_date:new Date().toISOString()
 })
 .eq("id",id);
+
+if(error){
+    alert(error.message);
+    return;
+}
 
     loadDashboard();
 /* DEDUCT LEAVE ONCE */
@@ -1543,7 +1764,37 @@ deducted:true
 
 }
 }
+async function approveOT(id){
 
+    if(!confirm("Approve this overtime request?")){
+        return;
+    }
+
+    const { error } = await db
+    .from("employee_overtime")
+    .update({
+
+        department_status: "Approved",
+
+        department_approved_by: currentUser.full_name,
+
+        department_approved_date: new Date().toISOString(),
+
+        hr_status: "Pending"
+
+    })
+    .eq("id", id);
+
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    alert("Overtime request approved.");
+
+loadDashboard();
+
+}
 /* REJECT */
 
 async function rejectLeave(id){
@@ -1556,26 +1807,58 @@ if(
 return;
 }
 
-await db
+const { error } = await db
 .from("employee_leaves")
 .update({
-
-status:"Rejected",
-
-approved_by:
-currentUser.full_name,
-
-approved_date:
-new Date().toISOString()
-
+    status: "Rejected",
+    approved_by: currentUser.full_name,
+    approved_date: new Date().toISOString()
 })
-.eq("id",id);
+.eq("id", id);
+
+if(error){
+    alert(error.message);
+    return;
+}
 
 loadDashboard();
 
 }
+    async function rejectOT(id){
+
+    if(!confirm("Reject this overtime request?")){
+        return;
+    }
+
+    const { error } = await db
+    .from("employee_overtime")
+    .update({
+
+        department_status: "Rejected",
+
+        department_approved_by: currentUser.full_name,
+
+        department_approved_date: new Date().toISOString(),
+
+        hr_status: "Rejected"
+
+    })
+    .eq("id", id);
+
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    alert("Overtime request rejected.");
+
+    loadOvertimeQueue();
+
+}
 loadManagerProfile();
 loadDashboard();
+
+    
 </script>
 
 </body>
