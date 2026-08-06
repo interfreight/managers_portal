@@ -253,6 +253,126 @@ gap:15px;
 .leave-form input,
 .leave-form select,
 .leave-form textarea{
+    padding:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:14px;
+}
+
+/* Summary Cards */
+.stats-wrapper{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:25px;
+    margin-bottom:25px;
+}
+
+.summary-card{
+
+background:white;
+
+padding:25px;
+
+border-radius:20px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.summary-card h3{
+
+color:#003366;
+
+margin-bottom:20px;
+
+padding-bottom:10px;
+
+border-bottom:3px solid #F4C542;
+
+}
+
+.summary-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+}
+
+.summary-box{
+
+padding:20px;
+
+border-radius:18px;
+
+text-align:center;
+
+transition:.3s;
+
+}
+
+.summary-box:hover{
+
+transform:translateY(-5px);
+
+}
+
+.pending-box{
+
+background:#fff8e5;
+
+}
+
+.approved-box{
+
+background:#eaf9f0;
+
+}
+
+.rejected-box{
+
+background:#fdecec;
+
+}
+
+.total-box{
+
+background:#eef5ff;
+
+}
+#overtimeQueue{
+height:720px;
+overflow-y:auto;
+padding-right:10px;
+}
+.summary-icon{
+
+font-size:30px;
+
+margin-bottom:8px;
+
+}
+
+.summary-title{
+
+font-size:14px;
+
+font-weight:600;
+
+color:#666;
+
+}
+
+.summary-number{
+
+font-size:42px;
+
+font-weight:bold;
+
+margin-top:10px;
+
+color:#003366;
+
+}-form select,
+.leave-form textarea{
 
 padding:12px;
 border:1px solid #ddd;
@@ -670,15 +790,10 @@ border-radius:18px;
 
 }
 .content-grid{
-
 display:grid;
-
-grid-template-columns:1fr 2fr;
-
+grid-template-columns:380px 1fr;
 gap:25px;
-
 align-items:start;
-
 }
 .hero-banner h1{
 
@@ -896,64 +1011,79 @@ Approved & rejected employee leaves
 </div>
 
 
-    <div class="stat-card">
+ <div class="stats-wrapper">
 
-        <h4>Pending Requests</h4>
+    <!-- Leave Summary -->
+    <div class="summary-card">
 
-        <div
-        class="number"
-        id="pendingCount">
+        <h3>📋 Leave Request Summary</h3>
 
-            0
+        <div class="summary-grid">
 
-        </div>
+            <div class="summary-box pending-box">
+                <div class="summary-icon">🟡</div>
+                <div class="summary-title">Pending</div>
+                <div class="summary-number" id="pendingCount">0</div>
+            </div>
 
-    </div>
+            <div class="summary-box approved-box">
+                <div class="summary-icon">🟢</div>
+                <div class="summary-title">Approved</div>
+                <div class="summary-number" id="approvedCount">0</div>
+            </div>
 
-    <div class="stat-card">
+            <div class="summary-box rejected-box">
+                <div class="summary-icon">🔴</div>
+                <div class="summary-title">Rejected</div>
+                <div class="summary-number" id="rejectedCount">0</div>
+            </div>
 
-        <h4>Approved Requests</h4>
-
-        <div
-        class="number"
-        id="approvedCount">
-
-            0
-
-        </div>
-
-    </div>
-
-    <div class="stat-card">
-
-        <h4>Rejected Requests</h4>
-
-        <div
-        class="number"
-        id="rejectedCount">
-
-            0
+            <div class="summary-box total-box">
+                <div class="summary-icon">📄</div>
+                <div class="summary-title">Total</div>
+                <div class="summary-number" id="totalCount">0</div>
+            </div>
 
         </div>
 
     </div>
 
-    <div class="stat-card">
+    <!-- Overtime Summary -->
+    <div class="summary-card">
 
-        <h4>Total Requests</h4>
+        <h3>⏰ Overtime Request Summary</h3>
 
-        <div
-        class="number"
-        id="totalCount">
+        <div class="summary-grid">
 
-            0
+            <div class="summary-box pending-box">
+                <div class="summary-icon">🟡</div>
+                <div class="summary-title">Pending</div>
+                <div class="summary-number" id="otPendingCount">0</div>
+            </div>
+
+            <div class="summary-box approved-box">
+                <div class="summary-icon">🟢</div>
+                <div class="summary-title">Approved</div>
+                <div class="summary-number" id="otApprovedCount">0</div>
+            </div>
+
+            <div class="summary-box rejected-box">
+                <div class="summary-icon">🔴</div>
+                <div class="summary-title">Rejected</div>
+                <div class="summary-number" id="otRejectedCount">0</div>
+            </div>
+
+            <div class="summary-box total-box">
+                <div class="summary-icon">📄</div>
+                <div class="summary-title">Total</div>
+                <div class="summary-number" id="otTotalCount">0</div>
+            </div>
 
         </div>
 
     </div>
 
 </div>
-
 <div class="content-grid">
 
     <div class="card">
@@ -1291,23 +1421,31 @@ async function loadStats(){
         return;
     }
 
-    const pending =
-        leaves.filter(x=>x.status==="Pending").length +
-        overtime.filter(x=>x.department_status==="Pending").length;
+   // Leave Summary
+document.getElementById("pendingCount").textContent =
+    leaves.filter(x => x.status === "Pending").length;
 
-    const approved =
-        leaves.filter(x=>x.status==="Approved").length +
-        overtime.filter(x=>x.department_status==="Approved").length;
+document.getElementById("approvedCount").textContent =
+    leaves.filter(x => x.status === "Approved").length;
 
-    const rejected =
-        leaves.filter(x=>x.status==="Rejected").length +
-        overtime.filter(x=>x.department_status==="Rejected").length;
+document.getElementById("rejectedCount").textContent =
+    leaves.filter(x => x.status === "Rejected").length;
 
-    document.getElementById("pendingCount").textContent = pending;
-    document.getElementById("approvedCount").textContent = approved;
-    document.getElementById("rejectedCount").textContent = rejected;
-    document.getElementById("totalCount").textContent =
-        pending + approved + rejected;
+document.getElementById("totalCount").textContent =
+    leaves.length;
+
+// Overtime Summary
+document.getElementById("otPendingCount").textContent =
+    overtime.filter(x => x.department_status === "Pending").length;
+
+document.getElementById("otApprovedCount").textContent =
+    overtime.filter(x => x.department_status === "Approved").length;
+
+document.getElementById("otRejectedCount").textContent =
+    overtime.filter(x => x.department_status === "Rejected").length;
+
+document.getElementById("otTotalCount").textContent =
+    overtime.length;
 
 }
 /* LOAD LEAVE QUEUE */
@@ -1554,21 +1692,34 @@ ${ot.department} • ${ot.position}
 <div class="request-grid">
 
 <div>
-
-<span class="request-label">
-
-Date
-
-</span>
-
-<strong>
-
-${ot.overtime_date} → ${ot.overtime_end_date}
-
-</strong>
-
+<span class="request-label">Date</span>
+<strong>${ot.overtime_date}</strong>
 </div>
 
+<div>
+<span class="request-label">End Date</span>
+<strong>${ot.overtime_end_date}</strong>
+</div>
+
+<div>
+<span class="request-label">Time</span>
+<strong>${ot.time_in} - ${ot.time_out}</strong>
+</div>
+
+<div>
+<span class="request-label">Hours</span>
+<strong>${ot.total_hours} hrs</strong>
+</div>
+
+<div>
+<span class="request-label">Department</span>
+<strong>${ot.department}</strong>
+</div>
+
+<div>
+<span class="request-label">Position</span>
+<strong>${ot.position}</strong>
+</div>
 <div>
 
 <span class="request-label">
@@ -1645,7 +1796,20 @@ Attachment
 ${
 ot.attachment
 ?
-`<a href="${ot.attachment}" target="_blank">View Attachment</a>`
+<a
+href="${ot.attachment}"
+target="_blank"
+style="
+background:#003366;
+color:white;
+padding:8px 14px;
+border-radius:8px;
+text-decoration:none;
+font-weight:bold;
+display:inline-block;
+">
+📎 View Attachment
+</a>
 :
 "No Attachment"
 }
@@ -1701,7 +1865,7 @@ if(error){
     return;
 }
 
-    loadDashboard();
+ await loadDashboard();
 /* DEDUCT LEAVE ONCE */
 
 if(!leave.deducted){
