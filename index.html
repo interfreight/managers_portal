@@ -1793,31 +1793,33 @@ Attachment
 
 <strong>
 
-${
-ot.attachment
-?
-<a
-href="${
-    ot.attachment
-    ? `
-    <a
-        href="${ot.attachment}"
-        target="_blank"
-        style="
-            background:#003366;
-            color:white;
-            padding:8px 14px;
-            border-radius:8px;
-            text-decoration:none;
-            font-weight:bold;
-            display:inline-block;
-        ">
-        📎 View Attachment
-    </a>
-    `
-    : "No Attachment"
-}
+<div>
+    <span class="request-label">
+        Attachment
+    </span>
 
+    ${
+        ot.attachment
+        ? `
+        <a
+            href="${ot.attachment}"
+            target="_blank"
+            style="
+                background:#003366;
+                color:white;
+                padding:8px 14px;
+                border-radius:8px;
+                text-decoration:none;
+                font-weight:bold;
+                display:inline-block;
+            ">
+            📎 View Attachment
+        </a>
+        `
+        : `<strong>No Attachment</strong>`
+    }
+
+</div>
 </strong>
 
 </div>
