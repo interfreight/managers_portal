@@ -1254,38 +1254,42 @@ async function loadDashboard(){
 
 async function loadStats(){
 
-let query =
-db
-.from("employee_leaves")
-.select("*");
+    // Leave Requests
+    const { data: leaves, error: leaveError } =
+    await db
+    .from("employee_leaves")
+    .select("status")
+    .eq("approver_role", currentUser.role.toUpperCase());
 
-query =
-query.eq(
-"approver_role",
-currentUser.role.toUpperCase()
-);
+    // Overtime Requests
+    const { data: overtime, error: otError } =
+    await db
+    .from("employee_overtime")
+    .select("department_status")
+    .eq("approver_role", currentUser.role.toUpperCase());
 
-const { data,error } =
-await query;
+    if(leaveError || otError){
+        console.log(leaveError || otError);
+        return;
+    }
 
-if(error){
+    const pending =
+        leaves.filter(x=>x.status==="Pending").length +
+        overtime.filter(x=>x.department_status==="Pending").length;
 
-console.log(error);
-return;
+    const approved =
+        leaves.filter(x=>x.status==="Approved").length +
+        overtime.filter(x=>x.department_status==="Approved").length;
 
-}
+    const rejected =
+        leaves.filter(x=>x.status==="Rejected").length +
+        overtime.filter(x=>x.department_status==="Rejected").length;
 
-document.getElementById("totalCount").textContent =
-data.length;
-
-document.getElementById("pendingCount").textContent =
-data.filter(x=>x.status==="Pending").length;
-
-document.getElementById("approvedCount").textContent =
-data.filter(x=>x.status==="Approved").length;
-
-document.getElementById("rejectedCount").textContent =
-data.filter(x=>x.status==="Rejected").length;
+    document.getElementById("pendingCount").textContent = pending;
+    document.getElementById("approvedCount").textContent = approved;
+    document.getElementById("rejectedCount").textContent = rejected;
+    document.getElementById("totalCount").textContent =
+        pending + approved + rejected;
 
 }
 /* LOAD LEAVE QUEUE */
