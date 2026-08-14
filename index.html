@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -10,256 +10,254 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
 <style>
 
+/* =====================================================
+   RESET
+===================================================== */
+
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',Arial,sans-serif;
 }
 
 body{
-background:#f4f7fb;
-min-height:100vh;
+    background:#f4f7fb;
+    min-height:100vh;
+    color:#333;
 }
 
-/* SIDEBAR */
-
-.sidebar{
-width:270px;
-background:linear-gradient(
-180deg,
-#00264d,
-#003366
-);
-color:white;
-padding:25px;
-box-shadow:5px 0 20px rgba(0,0,0,.08);
-}
-
-.logo{
-text-align:center;
-margin-bottom:35px;
-}
-
-.logo img{
-width:130px;
-}
-
-.logo h2{
-margin-top:15px;
-font-size:22px;
-letter-spacing:1px;
-}
-
-.menu{
-margin-top:25px;
-}
-
-.menu a{
-display:block;
-padding:15px;
-margin-bottom:10px;
-border-radius:12px;
-text-decoration:none;
-color:white;
-transition:.3s;
-font-weight:500;
-}
-
-.menu a:hover{
-background:#1E5AA8;
-}
-
-.menu .active{
-background:#F4C542;
-color:#003366;
-font-weight:bold;
-}
-
-/* MAIN */
+/* =====================================================
+   MAIN
+===================================================== */
 
 .main{
-max-width:1600px;
-margin:auto;
-padding:30px;
+    width:100%;
+    max-width:1700px;
+    margin:auto;
+    padding:25px;
 }
 
-/* HEADER */
+/* =====================================================
+   HEADER
+===================================================== */
 
-.header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:30px;
+.hero-banner{
+    background:linear-gradient(135deg,#003366,#00509e);
+    border-radius:22px;
+    padding:25px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:25px;
+    box-shadow:0 12px 30px rgba(0,51,102,.18);
+    color:white;
 }
 
-.header h1{
-color:#003366;
-font-size:32px;
+.hero-left{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    min-width:0;
 }
 
-.manager-name{
-color:#777;
-font-size:15px;
+.hero-logo{
+    width:85px;
+    height:85px;
+    object-fit:contain;
+    background:white;
+    padding:8px;
+    border-radius:16px;
+    flex-shrink:0;
 }
+
+.hero-banner h1{
+    font-size:32px;
+    margin-bottom:6px;
+}
+
+.hero-banner p{
+    opacity:.9;
+    font-size:15px;
+}
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+.logout-btn{
+    background:#F4C542;
+    color:#003366;
+    font-weight:bold;
+    border:none;
+    padding:12px 22px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:.2s;
+    flex-shrink:0;
+}
+
+.logout-btn:hover{
+    transform:translateY(-2px);
+}
+
+/* =====================================================
+   MANAGER PROFILE
+===================================================== */
+
 .profile-card{
-background:white;
-border-radius:20px;
-padding:25px 30px;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
+    background:white;
+    border-radius:20px;
+    padding:25px 30px;
+    box-shadow:0 8px 25px rgba(0,0,0,.07);
 
-display:flex;
-justify-content:space-between;
-align-items:center;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 
-margin-bottom:25px;
+    gap:25px;
+    margin-bottom:25px;
 }
 
 .profile-left{
-display:flex;
-align-items:center;
-gap:20px;
+    display:flex;
+    align-items:center;
+    gap:20px;
+    min-width:0;
 }
 
 .profile-photo{
-width:100px;
-height:100px;
-border-radius:50%;
-object-fit:cover;
-border:4px solid #F4C542;
-background:#f4f4f4;
+    width:105px;
+    height:105px;
+    border-radius:50%;
+    object-fit:cover;
+    border:4px solid #F4C542;
+    background:#f4f4f4;
+    flex-shrink:0;
 }
 
 .profile-details h2{
-font-size:28px;
-color:#003366;
-margin-bottom:6px;
+    font-size:27px;
+    color:#003366;
+    margin-bottom:6px;
 }
 
 .profile-details p{
-color:#666;
-margin-bottom:4px;
+    color:#666;
+    margin-bottom:4px;
 }
 
 .profile-right{
-display:flex;
-gap:15px;
+    display:flex;
+    gap:15px;
 }
 
 .info-box{
-background:#f8fafc;
-padding:15px 25px;
-border-radius:15px;
-text-align:center;
-min-width:140px;
+    background:#f7f9fc;
+    padding:15px 25px;
+    border-radius:14px;
+    text-align:center;
+    min-width:140px;
 }
 
 .info-box span{
-display:block;
-font-size:13px;
-color:#777;
-margin-bottom:5px;
-}
-.leave-form{
-display:flex;
-flex-direction:column;
-gap:12px;
+    display:block;
+    font-size:12px;
+    color:#777;
+    margin-bottom:5px;
 }
 
-.leave-form label{
-font-size:14px;
-font-weight:600;
-color:#003366;
-}
-
-.leave-form input,
-.leave-form select,
-.leave-form textarea{
-
-width:100%;
-padding:14px;
-border:1px solid #d9e2ec;
-border-radius:12px;
-font-size:14px;
-background:white;
-
-}
-
-.leave-form textarea{
-resize:none;
-min-height:120px;
-}
 .info-box strong{
-font-size:20px;
-color:#003366;
-}
-/* DASHBOARD CARDS */
-
-.stats{
-display:grid;
-grid-template-columns:
-repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-margin-bottom:25px;
+    font-size:19px;
+    color:#003366;
 }
 
-.stat-card{
-background:white;
-padding:25px;
-border-radius:20px;
-box-shadow:
-0 10px 30px rgba(0,0,0,.08);
-position:relative;
-overflow:hidden;
+/* =====================================================
+   GENERAL CARD
+===================================================== */
+
+.card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.07);
+    margin-bottom:25px;
+
+    min-width:0;
 }
 
-.stat-card{
-
-background:white;
-
-border-top:
-5px solid #F4C542;
-
-}
-.stat-card:hover{
-
-transform:translateY(-4px);
-
-transition:.3s;
-
-}
-.stat-card h4{
-color:#777;
-font-size:15px;
-margin-bottom:10px;
+.card h3{
+    color:#003366;
+    margin-bottom:20px;
+    font-size:20px;
 }
 
-.stat-card .number{
-font-size:42px;
-font-weight:bold;
-color:#003366;
+/* =====================================================
+   QUICK ACTIONS
+===================================================== */
+
+.navigation-card{
+    margin-bottom:25px;
 }
 
-/* LEAVE REQUESTS */
-.leave-form{
-display:grid;
-gap:15px;
+.quick-actions{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
 }
 
-.leave-form input,
-.leave-form select,
-.leave-form textarea{
-    padding:12px;
-    border:1px solid #ddd;
-    border-radius:10px;
-    font-size:14px;
+.action-btn{
+    display:flex;
+    align-items:center;
+    gap:16px;
+
+    padding:22px;
+
+    background:linear-gradient(
+        135deg,
+        #003366,
+        #00509e
+    );
+
+    color:white;
+    text-decoration:none;
+
+    border-radius:16px;
+
+    transition:.25s;
+
+    min-width:0;
 }
 
-/* Summary Cards */
+.action-btn:hover{
+    transform:translateY(-3px);
+    background:#F4C542;
+    color:#003366;
+}
+
+.action-btn .icon{
+    font-size:38px;
+    flex-shrink:0;
+}
+
+.action-btn .title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:4px;
+}
+
+.action-btn .desc{
+    font-size:13px;
+    opacity:.85;
+}
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
 .stats-wrapper{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -268,577 +266,558 @@ gap:15px;
 }
 
 .summary-card{
-
-background:white;
-
-padding:25px;
-
-border-radius:20px;
-
-box-shadow:0 10px 25px rgba(0,0,0,.08);
-
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,.07);
+    min-width:0;
 }
 
 .summary-card h3{
-
-color:#003366;
-
-margin-bottom:20px;
-
-padding-bottom:10px;
-
-border-bottom:3px solid #F4C542;
-
+    color:#003366;
+    margin-bottom:20px;
+    padding-bottom:12px;
+    border-bottom:3px solid #F4C542;
 }
 
 .summary-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-gap:15px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
 }
 
 .summary-box{
-
-padding:20px;
-
-border-radius:18px;
-
-text-align:center;
-
-transition:.3s;
-
-}
-
-.summary-box:hover{
-
-transform:translateY(-5px);
-
+    padding:18px 10px;
+    border-radius:15px;
+    text-align:center;
 }
 
 .pending-box{
-
-background:#fff8e5;
-
+    background:#fff8e5;
 }
 
 .approved-box{
-
-background:#eaf9f0;
-
+    background:#eaf9f0;
 }
 
 .rejected-box{
-
-background:#fdecec;
-
+    background:#fdecec;
 }
 
 .total-box{
-
-background:#eef5ff;
-
+    background:#eef5ff;
 }
-#overtimeQueue{
-height:720px;
-overflow-y:auto;
-padding-right:10px;
-}
+
 .summary-icon{
-
-font-size:30px;
-
-margin-bottom:8px;
-
+    font-size:25px;
+    margin-bottom:5px;
 }
 
 .summary-title{
-
-font-size:14px;
-
-font-weight:600;
-
-color:#666;
-
+    font-size:13px;
+    color:#666;
+    font-weight:600;
 }
 
 .summary-number{
+    font-size:32px;
+    font-weight:bold;
+    color:#003366;
+    margin-top:6px;
+}
 
-font-size:42px;
+/* =====================================================
+   CONTENT LAYOUT
+===================================================== */
 
-font-weight:bold;
+/*
+   LEFT = Leave Form
+   RIGHT = Approval Queues
 
-margin-top:10px;
+   minmax(0,1fr) is VERY IMPORTANT.
+   It prevents the queue from becoming wider than
+   its available space and creating horizontal scroll.
+*/
 
-color:#003366;
+.content-grid{
+    display:grid;
+    grid-template-columns:350px minmax(0,1fr);
+    gap:25px;
+    align-items:start;
+}
 
-}-form select,
+/* =====================================================
+   LEAVE FORM
+===================================================== */
+
+.leave-form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.leave-form label{
+    font-size:13px;
+    font-weight:600;
+    color:#003366;
+    margin-top:4px;
+}
+
+.leave-form input,
+.leave-form select,
 .leave-form textarea{
-
-padding:12px;
-border:1px solid #ddd;
-border-radius:10px;
-font-size:14px;
-
-}
-    .quick-actions{
-
-display:flex;
-gap:20px;
-margin-top:15px;
-
+    width:100%;
+    padding:12px 14px;
+    border:1px solid #d9e2ec;
+    border-radius:10px;
+    font-size:14px;
+    background:white;
+    outline:none;
 }
 
-.action-btn{
-
-flex:1;
-
-background:#003366;
-
-color:white;
-
-padding:30px;
-
-text-align:center;
-
-text-decoration:none;
-
-font-size:20px;
-
-font-weight:bold;
-
-border-radius:18px;
-
-transition:.3s;
-
-box-shadow:0 10px 20px rgba(0,0,0,.1);
-
-}
-.navigation-card{
-
-margin-bottom:25px;
-
+.leave-form input:focus,
+.leave-form select:focus,
+.leave-form textarea:focus{
+    border-color:#003366;
 }
 
-.quick-actions{
-
-display:grid;
-
-grid-template-columns:repeat(3,1fr);
-
-gap:20px;
-
-margin-top:15px;
-
+.leave-form textarea{
+    resize:vertical;
+    min-height:120px;
 }
 
-.action-btn{
+/* =====================================================
+   QUEUE AREA
+===================================================== */
 
-display:flex;
-
-align-items:center;
-
-gap:20px;
-
-padding:25px;
-
-background:linear-gradient(135deg,#003366,#004d99);
-
-color:white;
-
-text-decoration:none;
-
-border-radius:18px;
-
-transition:.3s;
-
-box-shadow:0 8px 20px rgba(0,0,0,.15);
-
+.queues-column{
+    min-width:0;
+    width:100%;
 }
 
-.action-btn:hover{
+/* Queue card */
 
-transform:translateY(-4px);
-
-background:linear-gradient(135deg,#004d99,#0066cc);
-
+.queue-card{
+    width:100%;
+    min-width:0;
 }
 
-.action-btn .icon{
+/*
+   Only the list scrolls.
+   The card itself stays full width.
+*/
 
-font-size:42px;
-
+.queue-list{
+    width:100%;
+    max-height:680px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding-right:5px;
 }
 
-.action-btn span:last-child{
-
-font-size:22px;
-
-font-weight:bold;
-
-}
-.action-btn:hover{
-
-background:#F4C542;
-
-color:#003366;
-
-transform:translateY(-5px);
-
-}
-    
-.card{
-background:white;
-padding:25px;
-border-radius:20px;
-box-shadow:
-0 10px 30px rgba(0,0,0,.08);
-margin-bottom:25px;
-}
-
-.card h3{
-color:#003366;
-margin-bottom:20px;
-}
-
-.hero-card{
-display:flex;
-align-items:center;
-gap:25px;
-margin-bottom:25px;
-}
-
-.profile-photo{
-width:120px;
-height:120px;
-border-radius:50%;
-object-fit:cover;
-border:4px solid #F4C542;
-}
-
-.hero-right h2{
-color:#003366;
-margin-bottom:10px;
-}
-
-.hero-right p{
-margin-bottom:5px;
-color:#666;
-}
+/* =====================================================
+   REQUEST CARD
+===================================================== */
 
 .request{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:20px;
-margin-bottom:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:20px;
+    width:100%;
+    min-width:0;
+
+    background:#fff;
+
+    border:1px solid #e4e9ef;
+
+    border-radius:18px;
+
+    padding:20px;
+
+    margin-bottom:15px;
+
+    box-shadow:0 4px 14px rgba(0,0,0,.04);
+
+    overflow:hidden;
 }
 
-.request-left{
-flex:1;
+/* Header */
+
+.request-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+
+    gap:15px;
+
+    margin-bottom:18px;
 }
 
 .request-name{
-font-size:20px;
-font-weight:700;
-color:#003366;
-margin-bottom:10px;
-}
+    font-size:20px;
+    font-weight:700;
+    color:#003366;
 
-.request-grid{
-display:grid;
-grid-template-columns:repeat(2,minmax(200px,1fr));
-gap:8px 25px;
-}
-
-.request-grid div{
-font-size:14px;
-color:#555;
-}
-
-.request-label{
-font-weight:600;
-color:#003366;
-}
-
-.request-right{
-text-align:right;
-min-width:180px;
-}
-
-.status-badge{
-display:inline-block;
-padding:8px 14px;
-border-radius:30px;
-font-weight:bold;
-margin-bottom:15px;
-}
-
-.pending{
-background:#fff3cd;
-color:#856404;
-}
-
-.approved{
-background:#d4edda;
-color:#155724;
-}
-
-.rejected{
-background:#f8d7da;
-color:#721c24;
-}
-.request-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:15px;
-}
-/* STATUS */
-
-.pending{
-color:#f0ad4e;
-font-weight:bold;
-}
-
-.approved{
-color:#28a745;
-font-weight:bold;
-}
-
-.rejected{
-color:#dc3545;
-font-weight:bold;
-}
-
-/* BUTTONS */
-.request{
-background:white;
-border-radius:20px;
-padding:22px;
-border:1px solid #e5e7eb;
-box-shadow:0 4px 15px rgba(0,0,0,.05);
-margin-bottom:15px;
-}
-
-.request-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-}
-
-.request-name{
-font-size:20px;
-font-weight:700;
-color:#003366;
+    overflow-wrap:anywhere;
 }
 
 .request-subtitle{
-font-size:14px;
-color:#666;
-margin-top:4px;
+    font-size:13px;
+    color:#777;
+    margin-top:4px;
+
+    overflow-wrap:anywhere;
 }
+
+/* =====================================================
+   REQUEST INFORMATION GRID
+===================================================== */
 
 .request-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-margin-bottom:20px;
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,minmax(0,1fr));
+
+    gap:12px;
+
+    margin-bottom:18px;
 }
 
-.request-grid div{
-background:#f8fafc;
-padding:12px;
-border-radius:12px;
+.request-item{
+    background:#f7f9fc;
+    border-radius:12px;
+    padding:13px;
+
+    min-width:0;
 }
 
 .request-label{
-display:block;
-font-size:12px;
-text-transform:uppercase;
-color:#888;
-margin-bottom:5px;
-font-weight:600;
+    display:block;
+
+    font-size:11px;
+
+    text-transform:uppercase;
+
+    color:#888;
+
+    margin-bottom:5px;
+
+    font-weight:700;
+
+    letter-spacing:.3px;
 }
 
+.request-item strong{
+    display:block;
+
+    color:#333;
+
+    font-size:14px;
+
+    overflow-wrap:anywhere;
+}
+
+/* Reason */
+
 .reason-box{
-grid-column:1 / -1;
+    grid-column:1 / -1;
 }
 
 .reason-box p{
-margin-top:5px;
-line-height:1.5;
-color:#555;
+    color:#555;
+    line-height:1.5;
+    font-size:14px;
+    overflow-wrap:anywhere;
 }
 
-.request-actions{
-display:flex;
-justify-content:flex-end;
-gap:10px;
+/* Attachment */
+
+.attachment-box{
+    grid-column:1 / -1;
 }
+
+.attachment-link{
+    display:inline-block;
+
+    background:#003366;
+
+    color:white;
+
+    padding:9px 14px;
+
+    border-radius:8px;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    margin-top:3px;
+}
+
+.attachment-link:hover{
+    background:#00509e;
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
 
 .status-badge{
-padding:8px 16px;
-border-radius:30px;
-font-size:13px;
-font-weight:700;
+    display:inline-block;
+
+    padding:7px 13px;
+
+    border-radius:30px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    white-space:nowrap;
+
+    flex-shrink:0;
 }
+
+.status-pending{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.status-approved{
+    background:#d4edda;
+    color:#155724;
+}
+
+.status-rejected{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.request-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+
+    border-top:1px solid #edf0f3;
+
+    padding-top:15px;
+}
+
 .btn{
-border:none;
-padding:10px 18px;
-border-radius:10px;
-cursor:pointer;
-font-weight:bold;
-margin-right:10px;
-margin-top:10px;
-}
-.header{
-background:white;
-padding:25px 30px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,.08);
-margin-bottom:25px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+    border:none;
+
+    padding:10px 18px;
+
+    border-radius:9px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    font-size:13px;
+
+    transition:.2s;
 }
 
-.header h1{
-font-size:34px;
-color:#003366;
-margin-bottom:5px;
+.btn:hover{
+    transform:translateY(-1px);
 }
-#leaveQueue{
 
-height:720px;
-
-overflow-y:auto;
-
-padding-right:10px;
-
-}
-.manager-name{
-color:#666;
-font-size:15px;
-}
 .btn-approve{
-background:#28a745;
-color:white;
+    background:#28a745;
+    color:white;
 }
 
 .btn-reject{
-background:#dc3545;
-color:white;
+    background:#dc3545;
+    color:white;
 }
 
-.logout-btn{
-background:#dc3545;
-color:white;
-border:none;
-padding:12px 18px;
-border-radius:10px;
-cursor:pointer;
-}
-.hero-banner{
+/* =====================================================
+   EMPTY / LOADING
+===================================================== */
 
-background:
-linear-gradient(
-135deg,
-#003366,
-#004b99
-);
-
-border-radius:25px;
-
-padding:25px 35px;
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-margin-bottom:25px;
-
-box-shadow:
-0 15px 40px rgba(0,51,102,.25);
-
-color:white;
-
+.loading-message,
+.empty-message{
+    padding:35px 15px;
+    text-align:center;
+    color:#777;
 }
 
-.hero-left{
+/* =====================================================
+   SCROLLBAR
+===================================================== */
 
-display:flex;
-align-items:center;
-gap:20px;
-
+.queue-list::-webkit-scrollbar{
+    width:7px;
 }
 
-.hero-logo{
-
-width:90px;
-height:90px;
-object-fit:contain;
-
-background:white;
-padding:10px;
-
-border-radius:18px;
-
+.queue-list::-webkit-scrollbar-track{
+    background:#f1f3f5;
+    border-radius:10px;
 }
-.content-grid{
-display:grid;
-grid-template-columns:380px 1fr;
-gap:25px;
-align-items:start;
-}
-.hero-banner h1{
 
-font-size:34px;
-margin-bottom:8px;
+.queue-list::-webkit-scrollbar-thumb{
+    background:#c4cbd3;
+    border-radius:10px;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1100px){
+
+    .content-grid{
+        grid-template-columns:300px minmax(0,1fr);
+    }
+
+    .summary-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .quick-actions{
+        grid-template-columns:1fr;
+    }
 
 }
 
-.hero-banner p{
+@media(max-width:850px){
 
-opacity:.9;
+    .main{
+        padding:15px;
+    }
+
+    .hero-banner{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .logout-btn{
+        width:100%;
+    }
+
+    .profile-card{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .profile-right{
+        width:100%;
+    }
+
+    .info-box{
+        flex:1;
+    }
+
+    .stats-wrapper{
+        grid-template-columns:1fr;
+    }
+
+    .content-grid{
+        grid-template-columns:1fr;
+    }
+
+    .queue-list{
+        max-height:none;
+    }
 
 }
 
-.logout-btn{
+@media(max-width:600px){
 
-background:#F4C542;
-color:#003366;
+    .main{
+        padding:10px;
+    }
 
-font-weight:bold;
+    .hero-banner{
+        padding:20px;
+    }
 
-border:none;
+    .hero-left{
+        align-items:flex-start;
+    }
 
-padding:12px 20px;
+    .hero-logo{
+        width:65px;
+        height:65px;
+    }
 
-border-radius:12px;
+    .hero-banner h1{
+        font-size:22px;
+    }
 
-cursor:pointer;
+    .profile-card{
+        padding:20px;
+    }
+
+    .profile-left{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .profile-photo{
+        width:90px;
+        height:90px;
+    }
+
+    .profile-right{
+        flex-direction:column;
+    }
+
+    .info-box{
+        width:100%;
+    }
+
+    .summary-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .request{
+        padding:15px;
+    }
+
+    .request-header{
+        flex-direction:column;
+    }
+
+    .request-grid{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .reason-box,
+    .attachment-box{
+        grid-column:1 / -1;
+    }
+
+    .request-actions{
+        justify-content:stretch;
+    }
+
+    .request-actions .btn{
+        flex:1;
+    }
 
 }
-/* RESPONSIVE */
 
-@media(max-width:768px){
+@media(max-width:420px){
 
-body{
-flex-direction:column;
-}
+    .request-grid{
+        grid-template-columns:1fr;
+    }
 
-.sidebar{
-width:100%;
-}
+    .reason-box,
+    .attachment-box{
+        grid-column:auto;
+    }
 
-.main{
-padding:20px;
-}
+    .summary-grid{
+        grid-template-columns:1fr 1fr;
+    }
 
 }
 
@@ -850,14 +829,17 @@ padding:20px;
 
 <div class="main">
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <div class="hero-banner">
 
     <div class="hero-left">
 
         <img
-        src="3. INTERFREIGHT COMPANY LOGO.png"
-        class="hero-logo">
+            src="3. INTERFREIGHT COMPANY LOGO.png"
+            class="hero-logo">
 
         <div>
 
@@ -874,24 +856,28 @@ padding:20px;
     </div>
 
     <button
-    class="logout-btn"
-    onclick="logout()">
+        class="logout-btn"
+        onclick="logout()">
 
         Logout
 
     </button>
 
 </div>
-<!-- MANAGER PROFILE CARD -->
+
+
+<!-- =====================================================
+     MANAGER PROFILE
+===================================================== -->
 
 <div class="profile-card">
 
-   <div class="profile-left">
+    <div class="profile-left">
 
-    <img
-        id="managerPhoto"
-        src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-        class="profile-photo">
+        <img
+            id="managerPhoto"
+            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            class="profile-photo">
 
         <div class="profile-details">
 
@@ -899,9 +885,13 @@ padding:20px;
                 Loading...
             </h2>
 
-            <p id="profileRole"></p>
+            <p id="profileRole">
+                -
+            </p>
 
-            <p id="profileDepartment"></p>
+            <p id="profileDepartment">
+                -
+            </p>
 
         </div>
 
@@ -933,87 +923,92 @@ padding:20px;
 
 </div>
 
-<!-- DASHBOARD CARDS -->
+
+<!-- =====================================================
+     QUICK ACTIONS
+===================================================== -->
+
 <div class="card navigation-card">
 
-<h3>Quick Actions</h3>
+    <h3>Quick Actions</h3>
 
-<div class="quick-actions">
+    <div class="quick-actions">
 
-<a
-href="https://interfreight.github.io/manager_My_leave_history/"
-class="action-btn">
+        <a
+            href="https://interfreight.github.io/manager_My_leave_history/"
+            class="action-btn">
 
-<div class="icon">📝</div>
+            <div class="icon">📝</div>
 
-<div>
+            <div>
 
-<div class="title">
+                <div class="title">
+                    My Leave History
+                </div>
 
-My Leave History
+                <div class="desc">
+                    View your own leave requests
+                </div>
 
-</div>
+            </div>
 
-<div class="desc">
+        </a>
 
-View your own leave requests
 
-</div>
+        <a
+            href="https://interfreight.github.io/employee_overtime_request/"
+            class="action-btn">
 
-</div>
+            <div class="icon">⏰</div>
 
-</a>
-<a
-href="https://interfreight.github.io/employee_overtime_request/"
-class="action-btn">
+            <div>
 
-<div class="icon">⏰</div>
+                <div class="title">
+                    Employee Overtime History
+                </div>
 
-<div>
+                <div class="desc">
+                    View overtime requests
+                </div>
 
-<div class="title">
-Employee Overtime History
-</div>
+            </div>
 
-<div class="desc">
-Approved & Rejected overtime requests
-</div>
+        </a>
 
-</div>
 
-</a>
-<a
-href="https://interfreight.github.io/manager_leave_history/"
-class="action-btn">
+        <a
+            href="https://interfreight.github.io/manager_leave_history/"
+            class="action-btn">
 
-<div class="icon">👥</div>
+            <div class="icon">👥</div>
 
-<div>
+            <div>
 
-<div class="title">
+                <div class="title">
+                    Employee Leave History
+                </div>
 
-Employee Leave History
+                <div class="desc">
+                    View employee leave records
+                </div>
 
-</div>
+            </div>
 
-<div class="desc">
+        </a>
 
-Approved & rejected employee leaves
-
-</div>
-
-</div>
-
-</a>
-
-</div>
+    </div>
 
 </div>
 
 
- <div class="stats-wrapper">
+<!-- =====================================================
+     SUMMARY
+===================================================== -->
 
-    <!-- Leave Summary -->
+<div class="stats-wrapper">
+
+    <!-- LEAVE -->
+
     <div class="summary-card">
 
         <h3>📋 Leave Request Summary</h3>
@@ -1021,34 +1016,79 @@ Approved & rejected employee leaves
         <div class="summary-grid">
 
             <div class="summary-box pending-box">
+
                 <div class="summary-icon">🟡</div>
-                <div class="summary-title">Pending</div>
-                <div class="summary-number" id="pendingCount">0</div>
+
+                <div class="summary-title">
+                    Pending
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="pendingCount">
+                    0
+                </div>
+
             </div>
+
 
             <div class="summary-box approved-box">
+
                 <div class="summary-icon">🟢</div>
-                <div class="summary-title">Approved</div>
-                <div class="summary-number" id="approvedCount">0</div>
+
+                <div class="summary-title">
+                    Approved
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="approvedCount">
+                    0
+                </div>
+
             </div>
+
 
             <div class="summary-box rejected-box">
+
                 <div class="summary-icon">🔴</div>
-                <div class="summary-title">Rejected</div>
-                <div class="summary-number" id="rejectedCount">0</div>
+
+                <div class="summary-title">
+                    Rejected
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="rejectedCount">
+                    0
+                </div>
+
             </div>
 
+
             <div class="summary-box total-box">
+
                 <div class="summary-icon">📄</div>
-                <div class="summary-title">Total</div>
-                <div class="summary-number" id="totalCount">0</div>
+
+                <div class="summary-title">
+                    Total
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="totalCount">
+                    0
+                </div>
+
             </div>
 
         </div>
 
     </div>
 
-    <!-- Overtime Summary -->
+
+    <!-- OVERTIME -->
+
     <div class="summary-card">
 
         <h3>⏰ Overtime Request Summary</h3>
@@ -1056,27 +1096,70 @@ Approved & rejected employee leaves
         <div class="summary-grid">
 
             <div class="summary-box pending-box">
+
                 <div class="summary-icon">🟡</div>
-                <div class="summary-title">Pending</div>
-                <div class="summary-number" id="otPendingCount">0</div>
+
+                <div class="summary-title">
+                    Pending
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="otPendingCount">
+                    0
+                </div>
+
             </div>
+
 
             <div class="summary-box approved-box">
+
                 <div class="summary-icon">🟢</div>
-                <div class="summary-title">Approved</div>
-                <div class="summary-number" id="otApprovedCount">0</div>
+
+                <div class="summary-title">
+                    Approved
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="otApprovedCount">
+                    0
+                </div>
+
             </div>
+
 
             <div class="summary-box rejected-box">
+
                 <div class="summary-icon">🔴</div>
-                <div class="summary-title">Rejected</div>
-                <div class="summary-number" id="otRejectedCount">0</div>
+
+                <div class="summary-title">
+                    Rejected
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="otRejectedCount">
+                    0
+                </div>
+
             </div>
 
+
             <div class="summary-box total-box">
+
                 <div class="summary-icon">📄</div>
-                <div class="summary-title">Total</div>
-                <div class="summary-number" id="otTotalCount">0</div>
+
+                <div class="summary-title">
+                    Total
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="otTotalCount">
+                    0
+                </div>
+
             </div>
 
         </div>
@@ -1084,39 +1167,89 @@ Approved & rejected employee leaves
     </div>
 
 </div>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
 <div class="content-grid">
+
+
+    <!-- =================================================
+         LEFT SIDE - FILE LEAVE
+    ================================================== -->
 
     <div class="card">
 
-        <h3>File Leave Request</h3>
+        <h3>📝 File Leave Request</h3>
 
         <div class="leave-form">
 
-            <label>Leave Type</label>
+            <label>
+                Leave Type
+            </label>
 
             <select id="leaveType">
-                <option>Vacation Leave</option>
-                <option>Sick Leave</option>
-                <option>Emergency Leave</option>
-                <option>Birthday Leave</option>
-                <option>Maternity Leave</option>
-                <option>Paternity Leave</option>
-                <option>Study Leave</option>
+
+                <option value="Vacation Leave">
+                    Vacation Leave
+                </option>
+
+                <option value="Sick Leave">
+                    Sick Leave
+                </option>
+
+                <option value="Emergency Leave">
+                    Emergency Leave
+                </option>
+
+                <option value="Birthday Leave">
+                    Birthday Leave
+                </option>
+
+                <option value="Maternity Leave">
+                    Maternity Leave
+                </option>
+
+                <option value="Paternity Leave">
+                    Paternity Leave
+                </option>
+
+                <option value="Study Leave">
+                    Study Leave
+                </option>
+
             </select>
 
-            <label>Date From</label>
-            <input type="date" id="dateFrom">
 
-            <label>Date To</label>
-            <input type="date" id="dateTo">
+            <label>
+                Date From
+            </label>
 
-            <label>Reason</label>
+            <input
+                type="date"
+                id="dateFrom">
+
+
+            <label>
+                Date To
+            </label>
+
+            <input
+                type="date"
+                id="dateTo">
+
+
+            <label>
+                Reason
+            </label>
 
             <textarea
                 id="reason"
-                rows="5"
                 placeholder="Enter reason for leave">
             </textarea>
+
 
             <button
                 class="btn btn-approve"
@@ -1130,265 +1263,483 @@ Approved & rejected employee leaves
 
     </div>
 
-    <div class="card">
 
-        <h3>Leave Approval Queue</h3>
+    <!-- =================================================
+         RIGHT SIDE - QUEUES
+    ================================================== -->
 
-        <div id="leaveQueue">
+    <div class="queues-column">
 
-            Loading leave requests...
+
+        <!-- =============================================
+             LEAVE APPROVAL
+        ============================================== -->
+
+        <div class="card queue-card">
+
+            <h3>
+                📋 Leave Approval Queue
+            </h3>
+
+            <div
+                id="leaveQueue"
+                class="queue-list">
+
+                <div class="loading-message">
+                    Loading leave requests...
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =============================================
+             OVERTIME APPROVAL
+        ============================================== -->
+
+        <div class="card queue-card">
+
+            <h3>
+                ⏰ Overtime Approval Queue
+            </h3>
+
+            <div
+                id="overtimeQueue"
+                class="queue-list">
+
+                <div class="loading-message">
+                    Loading overtime requests...
+                </div>
+
+            </div>
 
         </div>
 
     </div>
-<div class="card">
-
-    <h3>Overtime Approval Queue</h3>
-
-    <div id="overtimeQueue">
-
-        Loading overtime requests...
-
-    </div>
 
 </div>
+
+
 </div>
+
 
 <script>
-    async function submitLeave(){
 
-const leaveType =
-document.getElementById("leaveType").value;
+/* =====================================================
+   SUPABASE
+===================================================== */
 
-const dateFrom =
-document.getElementById("dateFrom").value;
+const db = window.supabase.createClient(
 
-const dateTo =
-document.getElementById("dateTo").value;
+    "https://tuihpvykuqbqnfyfepql.supabase.co",
 
-const reason =
-document.getElementById("reason").value;
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmxlIiwicmVmIjoidHVpaHB2eWt1cWJuZnlmZXBxbCIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzgxNzI4ODk3LCJleHAiOjIwOTczMDQ4OTN9.HZKS8CgFLjkZ-Bx2AIjFjurH3IsKjvf37Ft852CzJsQ"
 
-if(
-!leaveType ||
-!dateFrom ||
-!dateTo
-){
-alert("Please complete all fields.");
-return;
-}
-
-const from =
-new Date(dateFrom);
-
-const to =
-new Date(dateTo);
-
-const totalDays =
-Math.floor(
-(to - from) /
-(1000*60*60*24)
-) + 1;
-
-const { data: profile } =
-await db
-.from("employee_profiles")
-.select("*")
-.eq("user_id", currentUser.id)
-.single();
-
-        let approverRole = "";
-
-const role = currentUser.role.toUpperCase();
-
-if(role === "USER"){
-
-    switch(currentUser.department){
-
-        case "Accounting":
-            approverRole = "ACCOUNTING MANAGER";
-            break;
-
-        case "Operations":
-            approverRole = "OPERATIONS MANAGER";
-            break;
-
-        case "Sales":
-            approverRole = "SALES MANAGER";
-            break;
-
-        case "Transport":
-            approverRole = "TRANSPORT MANAGER";
-            break;
-
-        case "Forwarding":
-            approverRole = "FORWARDING MANAGER";
-            break;
-
-        case "HR":
-            approverRole = "HR";
-            break;
-
-    }
-
-}else{
-
-    approverRole = "PRESIDENT";
-
-}
-        
-const { error } =
-await db
-.from("employee_leaves")
-.insert([{
-
-user_id:
-currentUser.id,
-
-employee_name:
-currentUser.full_name,
-
-department:
-currentUser.department,
-
-approver_role:
-approverRole,
-
-leave_type:
-leaveType,
-
-date_from:
-dateFrom,
-
-date_to:
-dateTo,
-
-total_days:
-totalDays,
-
-reason:
-reason,
-
-status:"Pending",
-
-approved_by:null,
-
-deducted:false
-
-}]);
-
-if(error){
-
-alert(error.message);
-return;
-
-}
-
-alert("Leave request submitted successfully.");
-
-window.location.href =
-"https://interfreight.github.io/manager_My_leave_history/";
-}
-    
-async function loadManagerProfile(){
-
-const { data: profile, error } =
-await db
-.from("employee_profiles")
-.select("*")
-.eq("user_id", currentUser.id)
-.single();
-
-console.log(profile);
-console.log(error);
-
-document.getElementById("profileName").textContent =
-currentUser.full_name || "-";
-
-document.getElementById("profileRole").textContent =
-currentUser.role || "-";
-
-document.getElementById("profileDepartment").textContent =
-currentUser.department || "-";
-
-if(profile){
-
-document.getElementById("managerPhoto").src =
-profile.profile_photo ||
-"https://cdn-icons-png.flaticon.com/512/149/149071.png";
-
-document.getElementById("profileEmpID").textContent =
-profile.employee_id || "-";
-
-}
-
-}
-   
-    
-    const db = window.supabase.createClient(
-"https://tuihpvykuqbqnfyfepql.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1aWhwdnlrdXFicW5meWZlcHFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3Mjg4OTcsImV4cCI6MjA5NzMwNDg5N30.HZKS8CgFLjkZ-Bx2AIjFjurH3IsKjvf37Ft852CzJsQ"
 );
+
+
+/* =====================================================
+   CURRENT USER
+===================================================== */
+
 const currentUser =
-JSON.parse(localStorage.getItem("currentUser"));
-console.log(currentUser);
-console.log("Role:", currentUser.role);
-console.log("Department:", currentUser.department);
+    JSON.parse(
+        localStorage.getItem("currentUser")
+    );
+
+
+/* =====================================================
+   LOGIN CHECK
+===================================================== */
+
 if(!currentUser){
 
-window.location.href =
-"https://interfreight.github.io/login/";
+    window.location.replace(
+        "https://interfreight.github.io/login/"
+    );
 
 }
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
 
 function logout(){
 
-localStorage.removeItem("currentUser");
+    localStorage.removeItem("currentUser");
 
-window.location.href =
-"https://interfreight.github.io/login/";
+    window.location.replace(
+        "https://interfreight.github.io/login/"
+    );
 
 }
 
-document.getElementById("managerInfo").innerHTML =
-currentUser.full_name +
-" • " +
-currentUser.role;
 
-/* DETERMINE MANAGER DEPARTMENT */
+/* =====================================================
+   MANAGER INFO
+===================================================== */
+
+if(currentUser){
+
+    document.getElementById("managerInfo").textContent =
+        currentUser.full_name +
+        " • " +
+        currentUser.role;
+
+}
+
+
+/* =====================================================
+   MANAGER DEPARTMENT
+===================================================== */
 
 function getManagerDepartment(){
 
-const role = currentUser.role.toUpperCase();
+    if(!currentUser || !currentUser.role){
+        return null;
+    }
 
-switch(role){
+    const role =
+        currentUser.role
+        .toUpperCase()
+        .trim();
 
-case "TRANSPORT MANAGER":
-    return "Transport";
 
-case "OPERATIONS MANAGER":
-    return "Operations";
+    switch(role){
 
-case "SALES MANAGER":
-    return "Sales";
+        case "TRANSPORT MANAGER":
+            return "Transport";
 
-case "ACCOUNTING MANAGER":
-    return "Accounting";
+        case "OPERATIONS MANAGER":
+            return "Operations";
 
-case "FORWARDING MANAGER":
-    return "Forwarding";
+        case "SALES MANAGER":
+            return "Sales";
 
-case "HR":
-    return "ALL";
+        case "ACCOUNTING MANAGER":
+            return "Accounting";
 
-default:
-    return null;
+        case "FORWARDING MANAGER":
+            return "Forwarding";
+
+        case "HR":
+            return "ALL";
+
+        default:
+            return null;
+
+    }
 
 }
 
+
+/* =====================================================
+   LOAD MANAGER PROFILE
+===================================================== */
+
+async function loadManagerProfile(){
+
+    if(!currentUser){
+        return;
+    }
+
+
+    document.getElementById("profileName").textContent =
+        currentUser.full_name || "-";
+
+    document.getElementById("profileRole").textContent =
+        currentUser.role || "-";
+
+    document.getElementById("profileDepartment").textContent =
+        currentUser.department || "-";
+
+
+    const {
+        data: profile,
+        error
+    } = await db
+
+        .from("employee_profiles")
+
+        .select("*")
+
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+
+        .maybeSingle();
+
+
+    if(error){
+
+        console.error(
+            "Profile Error:",
+            error
+        );
+
+        return;
+
+    }
+
+
+    if(profile){
+
+        document.getElementById(
+            "managerPhoto"
+        ).src =
+            profile.profile_photo ||
+            "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+
+        document.getElementById(
+            "profileEmpID"
+        ).textContent =
+
+            profile.employee_number ||
+            profile.employee_id ||
+            currentUser.employee_number ||
+            currentUser.id ||
+            "-";
+
+    }
+
 }
+
+
+/* =====================================================
+   SUBMIT LEAVE
+===================================================== */
+
+async function submitLeave(){
+
+    if(!currentUser){
+        return;
+    }
+
+
+    const leaveType =
+        document.getElementById("leaveType").value;
+
+    const dateFrom =
+        document.getElementById("dateFrom").value;
+
+    const dateTo =
+        document.getElementById("dateTo").value;
+
+    const reason =
+        document.getElementById("reason").value.trim();
+
+
+    if(
+        !leaveType ||
+        !dateFrom ||
+        !dateTo ||
+        !reason
+    ){
+
+        alert(
+            "Please complete all fields."
+        );
+
+        return;
+
+    }
+
+
+    const from =
+        new Date(dateFrom);
+
+    const to =
+        new Date(dateTo);
+
+
+    if(to < from){
+
+        alert(
+            "Date To cannot be earlier than Date From."
+        );
+
+        return;
+
+    }
+
+
+    const totalDays =
+
+        Math.floor(
+            (
+                to - from
+            ) /
+            (
+                1000 * 60 * 60 * 24
+            )
+        ) + 1;
+
+
+    let approverRole = "";
+
+
+    const role =
+        (
+            currentUser.role || ""
+        )
+        .toUpperCase()
+        .trim();
+
+
+    const department =
+        (
+            currentUser.department || ""
+        )
+        .toUpperCase()
+        .trim();
+
+
+    if(role === "USER"){
+
+        switch(department){
+
+            case "ACCOUNTING":
+                approverRole =
+                    "ACCOUNTING MANAGER";
+                break;
+
+            case "OPERATIONS":
+                approverRole =
+                    "OPERATIONS MANAGER";
+                break;
+
+            case "SALES":
+                approverRole =
+                    "SALES MANAGER";
+                break;
+
+            case "TRANSPORT":
+                approverRole =
+                    "TRANSPORT MANAGER";
+                break;
+
+            case "FORWARDING":
+                approverRole =
+                    "FORWARDING MANAGER";
+                break;
+
+            case "HR":
+                approverRole =
+                    "HR";
+                break;
+
+            default:
+
+                alert(
+                    "No manager assigned for your department."
+                );
+
+                return;
+
+        }
+
+    }
+    else{
+
+        approverRole =
+            "PRESIDENT";
+
+    }
+
+
+    const {
+        error
+    } = await db
+
+        .from("employee_leaves")
+
+        .insert([{
+
+            user_id:
+                currentUser.id,
+
+            employee_name:
+                currentUser.full_name,
+
+            department:
+                currentUser.department,
+
+            approver_role:
+                approverRole,
+
+            leave_type:
+                leaveType,
+
+            date_from:
+                dateFrom,
+
+            date_to:
+                dateTo,
+
+            total_days:
+                totalDays,
+
+            reason:
+                reason,
+
+            status:
+                "Pending",
+
+            approved_by:
+                null,
+
+            approved_date:
+                null,
+
+            deducted:
+                false
+
+        }]);
+
+
+    if(error){
+
+        console.error(error);
+
+        alert(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Leave request submitted successfully."
+    );
+
+
+    document.getElementById("dateFrom").value = "";
+
+    document.getElementById("dateTo").value = "";
+
+    document.getElementById("reason").value = "";
+
+
+    loadDashboard();
+
+}
+
+
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
 
 async function loadDashboard(){
+
+    if(!currentUser){
+        return;
+    }
 
     await loadStats();
 
@@ -1398,660 +1749,1203 @@ async function loadDashboard(){
 
 }
 
-/* LOAD STATS */
+
+/* =====================================================
+   LOAD STATISTICS
+===================================================== */
 
 async function loadStats(){
 
-    // Leave Requests
-    const { data: leaves, error: leaveError } =
-    await db
-    .from("employee_leaves")
-    .select("status")
-    .eq("approver_role", currentUser.role.toUpperCase());
+    const managerRole =
+        (
+            currentUser.role || ""
+        )
+        .toUpperCase()
+        .trim();
 
-    // Overtime Requests
-    const { data: overtime, error: otError } =
-    await db
-    .from("employee_overtime")
-    .select("department_status")
-    .eq("approver_role", currentUser.role.toUpperCase());
 
-    if(leaveError || otError){
-        console.log(leaveError || otError);
-        return;
+    /* LEAVE */
+
+    const {
+        data: leaves,
+        error: leaveError
+    } = await db
+
+        .from("employee_leaves")
+
+        .select("status")
+
+        .eq(
+            "approver_role",
+            managerRole
+        );
+
+
+    /* OVERTIME */
+
+    const {
+        data: overtime,
+        error: otError
+    } = await db
+
+        .from("employee_overtime")
+
+        .select("department_status")
+
+        .eq(
+            "approver_role",
+            managerRole
+        );
+
+
+    if(leaveError){
+
+        console.error(
+            "Leave stats error:",
+            leaveError
+        );
+
     }
 
-   // Leave Summary
-document.getElementById("pendingCount").textContent =
-    leaves.filter(x => x.status === "Pending").length;
 
-document.getElementById("approvedCount").textContent =
-    leaves.filter(x => x.status === "Approved").length;
+    if(otError){
 
-document.getElementById("rejectedCount").textContent =
-    leaves.filter(x => x.status === "Rejected").length;
+        console.error(
+            "Overtime stats error:",
+            otError
+        );
 
-document.getElementById("totalCount").textContent =
-    leaves.length;
+    }
 
-// Overtime Summary
-document.getElementById("otPendingCount").textContent =
-    overtime.filter(x => x.department_status === "Pending").length;
 
-document.getElementById("otApprovedCount").textContent =
-    overtime.filter(x => x.department_status === "Approved").length;
+    const leaveData =
+        leaves || [];
 
-document.getElementById("otRejectedCount").textContent =
-    overtime.filter(x => x.department_status === "Rejected").length;
 
-document.getElementById("otTotalCount").textContent =
-    overtime.length;
+    const overtimeData =
+        overtime || [];
+
+
+    /* LEAVE */
+
+    document.getElementById(
+        "pendingCount"
+    ).textContent =
+
+        leaveData.filter(
+            x =>
+                x.status === "Pending"
+        ).length;
+
+
+    document.getElementById(
+        "approvedCount"
+    ).textContent =
+
+        leaveData.filter(
+            x =>
+                x.status === "Approved"
+        ).length;
+
+
+    document.getElementById(
+        "rejectedCount"
+    ).textContent =
+
+        leaveData.filter(
+            x =>
+                x.status === "Rejected"
+        ).length;
+
+
+    document.getElementById(
+        "totalCount"
+    ).textContent =
+        leaveData.length;
+
+
+    /* OVERTIME */
+
+    document.getElementById(
+        "otPendingCount"
+    ).textContent =
+
+        overtimeData.filter(
+            x =>
+                x.department_status === "Pending"
+        ).length;
+
+
+    document.getElementById(
+        "otApprovedCount"
+    ).textContent =
+
+        overtimeData.filter(
+            x =>
+                x.department_status === "Approved"
+        ).length;
+
+
+    document.getElementById(
+        "otRejectedCount"
+    ).textContent =
+
+        overtimeData.filter(
+            x =>
+                x.department_status === "Rejected"
+        ).length;
+
+
+    document.getElementById(
+        "otTotalCount"
+    ).textContent =
+        overtimeData.length;
 
 }
-/* LOAD LEAVE QUEUE */
+
+
+/* =====================================================
+   STATUS CLASS
+===================================================== */
+
+function getStatusClass(status){
+
+    if(status === "Approved"){
+        return "status-approved";
+    }
+
+    if(status === "Rejected"){
+        return "status-rejected";
+    }
+
+    return "status-pending";
+
+}
+
+
+/* =====================================================
+   LOAD LEAVE QUEUE
+===================================================== */
 
 async function loadLeaveQueue(){
 
-const container =
-document.getElementById("leaveQueue");
+    const container =
+        document.getElementById(
+            "leaveQueue"
+        );
 
-container.innerHTML =
-"Loading...";
 
-let query =
-db
-.from("employee_leaves")
-.select("*")
-.order(
-"created_at",
-{
-ascending:false
+    container.innerHTML =
+
+        `<div class="loading-message">
+            Loading leave requests...
+        </div>`;
+
+
+    const managerRole =
+        (
+            currentUser.role || ""
+        )
+        .toUpperCase()
+        .trim();
+
+
+    const {
+        data,
+        error
+    } = await db
+
+        .from("employee_leaves")
+
+        .select("*")
+
+        .eq(
+            "approver_role",
+            managerRole
+        )
+
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
+
+    if(error){
+
+        console.error(error);
+
+        container.innerHTML =
+
+            `<div class="empty-message">
+                ${error.message}
+            </div>`;
+
+        return;
+
+    }
+
+
+    if(!data || data.length === 0){
+
+        container.innerHTML =
+
+            `<div class="empty-message">
+                No leave requests found.
+            </div>`;
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    data.forEach(
+        leave => {
+
+
+            let buttons = "";
+
+
+            if(
+                leave.status === "Pending"
+            ){
+
+                buttons = `
+
+                    <button
+                        class="btn btn-approve"
+                        onclick="approveLeave(${leave.id})">
+
+                        ✓ Approve
+
+                    </button>
+
+
+                    <button
+                        class="btn btn-reject"
+                        onclick="rejectLeave(${leave.id})">
+
+                        ✕ Reject
+
+                    </button>
+
+                `;
+
+            }
+
+
+            container.innerHTML += `
+
+                <div class="request">
+
+                    <div class="request-header">
+
+                        <div>
+
+                            <div class="request-name">
+                                ${leave.employee_name || "-"}
+                            </div>
+
+                            <div class="request-subtitle">
+                                ${leave.department || "-"}
+                                •
+                                ${leave.leave_type || "-"}
+                            </div>
+
+                        </div>
+
+
+                        <span class="status-badge ${getStatusClass(leave.status)}">
+
+                            ${leave.status || "Pending"}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="request-grid">
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Date From
+                            </span>
+
+                            <strong>
+                                ${leave.date_from || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Date To
+                            </span>
+
+                            <strong>
+                                ${leave.date_to || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Total Days
+                            </span>
+
+                            <strong>
+                                ${leave.total_days || 0} day(s)
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Approved By
+                            </span>
+
+                            <strong>
+                                ${leave.approved_by || "Pending"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item reason-box">
+
+                            <span class="request-label">
+                                Reason
+                            </span>
+
+                            <p>
+                                ${leave.reason || "-"}
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                    ${
+                        buttons
+                        ?
+                        `
+                        <div class="request-actions">
+                            ${buttons}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+            `;
+
+        }
+    );
+
 }
-);
 
-query =
-query.eq(
-"approver_role",
-currentUser.role.toUpperCase()
-);
 
-const { data, error } = await query;
-console.log("Current User:", currentUser);
-console.log("Looking for approver_role:", currentUser.role.toUpperCase());
-console.log("Returned rows:", data);
-console.log("Error:", error);
-    
-if(error){
+/* =====================================================
+   LOAD OVERTIME QUEUE
+===================================================== */
 
-container.innerHTML =
-error.message;
-
-return;
-
-}
-
-if(data.length===0){
-
-container.innerHTML =
-"No leave requests found.";
-
-return;
-
-}
-
-container.innerHTML = "";
-
-data.forEach(leave=>{
-
-let buttons = "";
-
-if(leave.status==="Pending"){
-
-buttons = `
-
-<button
-class="btn btn-approve"
-onclick="approveLeave(${leave.id})">
-
-Approve
-
-</button>
-
-<button
-class="btn btn-reject"
-onclick="rejectLeave(${leave.id})">
-
-Reject
-
-</button>
-
-`;
-
-}
-
-container.innerHTML += `
-
-<div class="request">
-
-    <div class="request-header">
-
-        <div>
-
-            <div class="request-name">
-                ${leave.employee_name}
-            </div>
-
-            <div class="request-subtitle">
-                ${leave.department} • ${leave.leave_type}
-            </div>
-
-        </div>
-
-        <span class="status-badge ${leave.status.toLowerCase()}">
-            ${leave.status}
-        </span>
-
-    </div>
-
-    <div class="request-grid">
-
-        <div>
-            <span class="request-label">Date From</span>
-            <strong>${leave.date_from}</strong>
-        </div>
-
-        <div>
-            <span class="request-label">Date To</span>
-            <strong>${leave.date_to}</strong>
-        </div>
-
-        <div>
-            <span class="request-label">Total Days</span>
-            <strong>${leave.total_days}</strong>
-        </div>
-
-        <div>
-            <span class="request-label">Approved By</span>
-            <strong>${leave.approved_by || "Pending"}</strong>
-        </div>
-
-        <div class="reason-box">
-            <span class="request-label">Reason</span>
-            <p>${leave.reason}</p>
-        </div>
-
-    </div>
-
-    <div class="request-actions">
-
-        ${buttons}
-
-    </div>
-
-</div>
-
-`;
-}); // closes data.forEach
-
-} // closes loadLeaveQueue
-/* APPROVE */
 async function loadOvertimeQueue(){
 
     const container =
-    document.getElementById("overtimeQueue");
+        document.getElementById(
+            "overtimeQueue"
+        );
 
-    container.innerHTML = "Loading...";
 
-    const { data, error } =
-    await db
-    .from("employee_overtime")
-    .select("*")
-    .eq(
-        "approver_role",
-        currentUser.role.toUpperCase()
-    )
-    .order("created_at",{ascending:false});
+    container.innerHTML =
+
+        `<div class="loading-message">
+            Loading overtime requests...
+        </div>`;
+
+
+    const managerRole =
+        (
+            currentUser.role || ""
+        )
+        .toUpperCase()
+        .trim();
+
+
+    const {
+        data,
+        error
+    } = await db
+
+        .from("employee_overtime")
+
+        .select("*")
+
+        .eq(
+            "approver_role",
+            managerRole
+        )
+
+        .order(
+            "created_at",
+            {
+                ascending:false
+            }
+        );
+
 
     if(error){
 
-        container.innerHTML = error.message;
-
-        return;
-
-    }
-
-    if(data.length===0){
+        console.error(error);
 
         container.innerHTML =
-        "No overtime requests.";
+
+            `<div class="empty-message">
+                ${error.message}
+            </div>`;
 
         return;
 
     }
 
-    container.innerHTML="";
 
-    data.forEach(ot=>{
+    if(!data || data.length === 0){
 
-        let buttons="";
+        container.innerHTML =
 
-        if(ot.department_status==="Pending"){
+            `<div class="empty-message">
+                No overtime requests found.
+            </div>`;
 
-            buttons=`
+        return;
 
-<button
-class="btn btn-approve"
-onclick="approveOT('${ot.id}')">
+    }
 
-Approve
 
-</button>
+    container.innerHTML = "";
 
-<button
-class="btn btn-reject"
-onclick="rejectOT('${ot.id}')">
 
-Decline
+    data.forEach(
+        ot => {
 
-</button>
 
-`;
+            let buttons = "";
+
+
+            if(
+                ot.department_status === "Pending"
+            ){
+
+                buttons = `
+
+                    <button
+                        class="btn btn-approve"
+                        onclick="approveOT('${ot.id}')">
+
+                        ✓ Approve
+
+                    </button>
+
+
+                    <button
+                        class="btn btn-reject"
+                        onclick="rejectOT('${ot.id}')">
+
+                        ✕ Reject
+
+                    </button>
+
+                `;
+
+            }
+
+
+            const attachment =
+
+                ot.attachment
+
+                ?
+
+                `
+
+                    <a
+                        href="${ot.attachment}"
+                        target="_blank"
+                        class="attachment-link">
+
+                        📎 View Attachment
+
+                    </a>
+
+                `
+
+                :
+
+                `<span style="color:#777;">
+                    No attachment
+                </span>`;
+
+
+            container.innerHTML += `
+
+                <div class="request">
+
+
+                    <!-- HEADER -->
+
+                    <div class="request-header">
+
+                        <div>
+
+                            <div class="request-name">
+
+                                ${ot.employee_name || "-"}
+
+                            </div>
+
+                            <div class="request-subtitle">
+
+                                ${ot.department || "-"}
+                                •
+                                ${ot.position || "-"}
+
+                            </div>
+
+                        </div>
+
+
+                        <span
+                            class="status-badge
+                            ${getStatusClass(
+                                ot.department_status
+                            )}">
+
+                            ${ot.department_status || "Pending"}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- INFORMATION -->
+
+                    <div class="request-grid">
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Date
+                            </span>
+
+                            <strong>
+                                ${ot.overtime_date || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                End Date
+                            </span>
+
+                            <strong>
+                                ${ot.overtime_end_date || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Time
+                            </span>
+
+                            <strong>
+                                ${ot.time_in || "-"}
+                                -
+                                ${ot.time_out || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Hours
+                            </span>
+
+                            <strong>
+                                ${ot.total_hours || 0} hrs
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Department
+                            </span>
+
+                            <strong>
+                                ${ot.department || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item">
+
+                            <span class="request-label">
+                                Position
+                            </span>
+
+                            <strong>
+                                ${ot.position || "-"}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="request-item reason-box">
+
+                            <span class="request-label">
+                                Reason
+                            </span>
+
+                            <p>
+                                ${ot.reason || "-"}
+                            </p>
+
+                        </div>
+
+
+                        <div class="request-item attachment-box">
+
+                            <span class="request-label">
+                                Attachment
+                            </span>
+
+                            ${attachment}
+
+                        </div>
+
+
+                    </div>
+
+
+                    ${
+                        buttons
+                        ?
+                        `
+                        <div class="request-actions">
+                            ${buttons}
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+
+                </div>
+
+            `;
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   APPROVE LEAVE
+===================================================== */
+
+async function approveLeave(id){
+
+    if(
+        !confirm(
+            "Approve this leave request?"
+        )
+    ){
+        return;
+    }
+
+
+    const {
+        data: leave,
+        error: getError
+    } = await db
+
+        .from("employee_leaves")
+
+        .select("*")
+
+        .eq(
+            "id",
+            id
+        )
+
+        .single();
+
+
+    if(getError){
+
+        alert(
+            getError.message
+        );
+
+        return;
+
+    }
+
+
+    if(!leave){
+        return;
+    }
+
+
+    const {
+        error
+    } = await db
+
+        .from("employee_leaves")
+
+        .update({
+
+            status:
+                "Approved",
+
+            approved_by:
+                currentUser.full_name,
+
+            approved_date:
+                new Date().toISOString()
+
+        })
+
+        .eq(
+            "id",
+            id
+        );
+
+
+    if(error){
+
+        alert(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    /* =================================================
+       DEDUCT LEAVE CREDIT
+    ================================================= */
+
+    if(!leave.deducted){
+
+        const {
+            data: profile
+        } = await db
+
+            .from("employee_profiles")
+
+            .select("*")
+
+            .eq(
+                "user_id",
+                leave.user_id
+            )
+
+            .single();
+
+
+        if(profile){
+
+            let field = "";
+
+
+            switch(
+                leave.leave_type
+            ){
+
+                case "Vacation Leave":
+                    field = "vacation_leave";
+                    break;
+
+                case "Sick Leave":
+                    field = "sick_leave";
+                    break;
+
+                case "Emergency Leave":
+                    field = "emergency_leave";
+                    break;
+
+                case "Birthday Leave":
+                    field = "birthday_leave";
+                    break;
+
+                case "Maternity Leave":
+                    field = "maternity_leave";
+                    break;
+
+                case "Paternity Leave":
+                    field = "paternity_leave";
+                    break;
+
+                case "Study Leave":
+                    field = "study_leave";
+                    break;
+
+            }
+
+
+            if(field){
+
+                const current =
+                    Number(
+                        profile[field] || 0
+                    );
+
+
+                const remaining =
+                    Math.max(
+                        0,
+                        current -
+                        Number(
+                            leave.total_days || 0
+                        )
+                    );
+
+
+                await db
+
+                    .from("employee_profiles")
+
+                    .update({
+
+                        [field]:
+                            remaining
+
+                    })
+
+                    .eq(
+                        "user_id",
+                        leave.user_id
+                    );
+
+            }
 
         }
 
-        container.innerHTML += `
 
-<div class="request">
+        await db
 
-<div class="request-header">
+            .from("employee_leaves")
 
-<div>
+            .update({
 
-<div class="request-name">
+                deducted:
+                    true
 
-${ot.employee_name}
+            })
 
-</div>
+            .eq(
+                "id",
+                id
+            );
 
-<div class="request-subtitle">
-
-${ot.department} • ${ot.position}
-
-</div>
-
-</div>
-
-<span class="status-badge ${ot.department_status.toLowerCase()}">
-
-    ${ot.department_status}
-
-</span>
-
-</div>
-
-<div class="request-grid">
-
-<div>
-<span class="request-label">Date</span>
-<strong>${ot.overtime_date}</strong>
-</div>
-
-<div>
-<span class="request-label">End Date</span>
-<strong>${ot.overtime_end_date}</strong>
-</div>
-
-<div>
-<span class="request-label">Time</span>
-<strong>${ot.time_in} - ${ot.time_out}</strong>
-</div>
-
-<div>
-<span class="request-label">Hours</span>
-<strong>${ot.total_hours} hrs</strong>
-</div>
-
-<div>
-<span class="request-label">Department</span>
-<strong>${ot.department}</strong>
-</div>
-
-<div>
-<span class="request-label">Position</span>
-<strong>${ot.position}</strong>
-</div>
-<div>
-
-<span class="request-label">
-
-Hours
-
-</span>
-
-<strong>
-
-${ot.total_hours}
-
-</strong>
-
-</div>
-
-<div>
-
-<span class="request-label">
-
-Time In
-
-</span>
-
-<strong>
-
-${ot.time_in}
-
-</strong>
-
-</div>
-
-<div>
-
-<span class="request-label">
-
-Time Out
-
-</span>
-
-<strong>
-
-${ot.time_out}
-
-</strong>
-
-</div>
-
-<div class="reason-box">
-
-<span class="request-label">
-
-Reason
-
-</span>
-
-<p>
-
-${ot.reason}
-
-</p>
-
-</div>
-<div>
-
-<span class="request-label">
-
-Attachment
-
-</span>
-
-<strong>
-
-<div>
-    <span class="request-label">
-        Attachment
-    </span>
-
-    ${
-        ot.attachment
-        ? `
-        <a
-            href="${ot.attachment}"
-            target="_blank"
-            style="
-                background:#003366;
-                color:white;
-                padding:8px 14px;
-                border-radius:8px;
-                text-decoration:none;
-                font-weight:bold;
-                display:inline-block;
-            ">
-            📎 View Attachment
-        </a>
-        `
-        : `<strong>No Attachment</strong>`
     }
 
-</div>
-</strong>
 
-</div>
-</div>
+    alert(
+        "Leave approved successfully."
+    );
 
-<div class="request-actions">
 
-${buttons}
-
-</div>
-
-</div>
-
-`;
-
-    });
-
-}
-async function approveLeave(id){
-
-if(
-!confirm(
-"Approve this leave?"
-)
-){
-return;
-}
-
-const { data: leave } =
-await db
-.from("employee_leaves")
-.select("*")
-.eq("id", id)
-.single();
-
-if(!leave) return;
-
-const { error } = await db
-.from("employee_leaves")
-.update({
-    status:"Approved",
-    approved_by:currentUser.full_name,
-    approved_date:new Date().toISOString()
-})
-.eq("id",id);
-
-if(error){
-    alert(error.message);
-    return;
-}
-
- await loadDashboard();
-/* DEDUCT LEAVE ONCE */
-
-if(!leave.deducted){
-
-const { data: profile } =
-await db
-.from("employee_profiles")
-.select("*")
-.eq(
-"user_id",
-leave.user_id
-)
-.single();
-
-let field = "";
-
-switch(leave.leave_type){
-
-case "Vacation Leave":
-field = "vacation_leave";
-break;
-
-case "Sick Leave":
-field = "sick_leave";
-break;
-
-case "Emergency Leave":
-field = "emergency_leave";
-break;
-
-case "Birthday Leave":
-field = "birthday_leave";
-break;
-
-case "Maternity Leave":
-field = "maternity_leave";
-break;
-
-case "Paternity Leave":
-field = "paternity_leave";
-break;
-
-case "Study Leave":
-field = "study_leave";
-break;
+    await loadDashboard();
 
 }
 
-if(field){
 
-const current =
-profile[field] || 0;
-
-const remaining =
-Math.max(
-0,
-current - leave.total_days
-);
-
-await db
-.from("employee_profiles")
-.update({
-
-[field]: remaining
-
-})
-.eq(
-"user_id",
-leave.user_id
-);
-
-}
-
-await db
-.from("employee_leaves")
-.update({
-
-deducted:true
-
-})
-.eq("id",id);
-
-}
-}
-async function approveOT(id){
-
-    if(!confirm("Approve this overtime request?")){
-        return;
-    }
-
-    const { error } = await db
-    .from("employee_overtime")
-    .update({
-
-        department_status: "Approved",
-
-        department_approved_by: currentUser.full_name,
-
-        department_approved_date: new Date().toISOString(),
-
-        hr_status: "Pending"
-
-    })
-    .eq("id", id);
-
-    if(error){
-        alert(error.message);
-        return;
-    }
-
-    alert("Overtime request approved.");
-
-loadDashboard();
-
-}
-/* REJECT */
+/* =====================================================
+   REJECT LEAVE
+===================================================== */
 
 async function rejectLeave(id){
 
-if(
-!confirm(
-"Reject this leave?"
-)
-){
-return;
-}
-
-const { error } = await db
-.from("employee_leaves")
-.update({
-    status: "Rejected",
-    approved_by: currentUser.full_name,
-    approved_date: new Date().toISOString()
-})
-.eq("id", id);
-
-if(error){
-    alert(error.message);
-    return;
-}
-
-loadDashboard();
-
-}
-    async function rejectOT(id){
-
-    if(!confirm("Reject this overtime request?")){
+    if(
+        !confirm(
+            "Reject this leave request?"
+        )
+    ){
         return;
     }
 
-    const { error } = await db
-    .from("employee_overtime")
-    .update({
 
-        department_status: "Rejected",
+    const {
+        error
+    } = await db
 
-        department_approved_by: currentUser.full_name,
+        .from("employee_leaves")
 
-        department_approved_date: new Date().toISOString(),
+        .update({
 
-        hr_status: "Rejected"
+            status:
+                "Rejected",
 
-    })
-    .eq("id", id);
+            approved_by:
+                currentUser.full_name,
+
+            approved_date:
+                new Date().toISOString()
+
+        })
+
+        .eq(
+            "id",
+            id
+        );
+
 
     if(error){
-        alert(error.message);
+
+        alert(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Leave rejected."
+    );
+
+
+    await loadDashboard();
+
+}
+
+
+/* =====================================================
+   APPROVE OVERTIME
+===================================================== */
+
+async function approveOT(id){
+
+    if(
+        !confirm(
+            "Approve this overtime request?"
+        )
+    ){
         return;
     }
 
-    alert("Overtime request rejected.");
 
-    loadOvertimeQueue();
+    const {
+        error
+    } = await db
+
+        .from("employee_overtime")
+
+        .update({
+
+            department_status:
+                "Approved",
+
+            department_approved_by:
+                currentUser.full_name,
+
+            department_approved_date:
+                new Date().toISOString(),
+
+            hr_status:
+                "Pending"
+
+        })
+
+        .eq(
+            "id",
+            id
+        );
+
+
+    if(error){
+
+        alert(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Overtime request approved."
+    );
+
+
+    await loadDashboard();
 
 }
-loadManagerProfile();
-loadDashboard();
 
-    
+
+/* =====================================================
+   REJECT OVERTIME
+===================================================== */
+
+async function rejectOT(id){
+
+    if(
+        !confirm(
+            "Reject this overtime request?"
+        )
+    ){
+        return;
+    }
+
+
+    const {
+        error
+    } = await db
+
+        .from("employee_overtime")
+
+        .update({
+
+            department_status:
+                "Rejected",
+
+            department_approved_by:
+                currentUser.full_name,
+
+            department_approved_date:
+                new Date().toISOString(),
+
+            hr_status:
+                "Rejected"
+
+        })
+
+        .eq(
+            "id",
+            id
+        );
+
+
+    if(error){
+
+        alert(
+            error.message
+        );
+
+        return;
+
+    }
+
+
+    alert(
+        "Overtime request rejected."
+    );
+
+
+    await loadDashboard();
+
+}
+
+
+/* =====================================================
+   BACK BUTTON / PAGE SHOW
+===================================================== */
+
+window.addEventListener(
+    "pageshow",
+    function(){
+
+        const user =
+            JSON.parse(
+                localStorage.getItem(
+                    "currentUser"
+                )
+            );
+
+
+        if(!user){
+
+            window.location.replace(
+                "https://interfreight.github.io/login/"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   OTHER TAB LOGOUT
+===================================================== */
+
+window.addEventListener(
+    "storage",
+    function(event){
+
+        if(
+            event.key === "currentUser" &&
+            event.newValue === null
+        ){
+
+            window.location.replace(
+                "https://interfreight.github.io/login/"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+if(currentUser){
+
+    loadManagerProfile();
+
+    loadDashboard();
+
+}
+
 </script>
 
 </body>
+
 </html>
