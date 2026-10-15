@@ -2583,9 +2583,17 @@ async function loadOvertimeQueue(){
    INCIDENT REPORT APPROVAL
 ===================================================== */
 
-function getIncidentManagerDepartment(){
-    const role = String(currentUser?.role || "").toUpperCase().trim();
-    const department = String(currentUser?.department || "").trim();
+function getIncidentManagerDepartment() {
+    if (!currentUser) {
+        return null;
+    }
+
+    const role = String(currentUser.role || "")
+        .trim()
+        .toUpperCase();
+
+    const department = String(currentUser.department || "")
+        .trim();
 
     const roleDepartments = {
         "ACCOUNTING MANAGER": "Accounting",
@@ -2593,16 +2601,31 @@ function getIncidentManagerDepartment(){
         "OPERATIONS MANAGER": "Operations",
         "TRANSPORT MANAGER": "Transport",
         "FORWARDING MANAGER": "Forwarding",
-        "HR": "HR",
         "HR MANAGER": "HR",
         "ADMIN MANAGER": "Admin",
         "IT MANAGER": "IT"
     };
 
-    if (roleDepartments[role]) return roleDepartments[role];
+    // Use the department assigned to a recognized manager role.
+    if (roleDepartments[role]) {
+        return roleDepartments[role];
+    }
 
-    // Allow a department-specific manager role if the role name includes MANAGER.
-    if (role.includes("MANAGER") && department) return department;
+    // Allow other department-specific manager roles.
+    if (role.includes("MANAGER") && department) {
+        return department;
+    }
+
+    // HR can review reports across departments only if intended
+    // and permitted by your database access policies.
+    if (role === "HR") {
+        return "ALL";
+    }
+
+    console.error("Unrecognized manager role:", {
+        role: currentUser.role,
+        department: currentUser.department
+    });
 
     return null;
 }
@@ -2658,11 +2681,24 @@ async function loadIncidentQueue(){
         </div>
     `;
 
-    const { data, error } = await db
-        .from("incident_reports")
-        .select("*")
-        .eq("department", department)
-        .order("created_at", { ascending: false });
+   
+let query = db
+    .from("incident_reports")
+    .select("*");
+
+if (department !== "ALL") {
+    query = query.eq("department", department);
+}
+
+const { data, error } = await query
+    .order("created_at", { ascending: false });
+
+console.log("Manager role:", currentUser.role);
+console.log("Manager department:", currentUser.department);
+console.log("Department being searched:", department);
+console.log("Incident reports returned:", data);
+console.log("Incident report error:", error);
+
 
     if(error){
         console.error("Incident report loading error:", error);
