@@ -2654,84 +2654,43 @@ let incidentQueueFilter = "Pending";
 
 
 
-async function loadIncidentQueue(){
+async function loadIncidentQueue() {
     const container = document.getElementById("incidentQueue");
 
-    if(!container || !currentUser) return;
+    if (!container || !currentUser) return;
 
-    // Get the department for the logged-in manager.
+    // Determine the department from the manager's account
     const department = getIncidentManagerDepartment();
 
     console.log("Manager account:", currentUser);
     console.log("Department being searched:", department);
 
-    if(!department){
-        container.innerHTML = `
-            <div class="empty-message">
-                Your account is not mapped to a department manager role.
-                Please ask IT to confirm your role and department.
-            </div>
-        `;
+    if (!department) {
+        container.innerHTML =
+            "Your account is not mapped to a department manager role. Please ask IT to check your role and department.";
         return;
     }
 
-    container.innerHTML = `
-        <div class="loading-message">
-            Loading incident reports...
-        </div>
-    `;
+    container.innerHTML = "Loading incident reports...";
 
-   
-let query = db
-    .from("incident_reports")
-    .select("*");
+    const { data, error } = await db
+        .from("incident_reports")
+        .select("*")
+        .eq("department", department)
+        .order("created_at", { ascending: false });
 
-if (department !== "ALL") {
-    query = query.eq("department", department);
-}
-
-const { data, error } = await query
-    .order("created_at", { ascending: false });
-
-console.log("Manager role:", currentUser.role);
-console.log("Manager department:", currentUser.department);
-console.log("Department being searched:", department);
-console.log("Incident reports returned:", data);
-console.log("Incident report error:", error);
-
-
-    if(error){
-        console.error("Incident report loading error:", error);
-
-        container.innerHTML = `
-            <div class="empty-message">
-                Could not load incident reports:
-                ${escapeIncidentHTML(error.message)}
-            </div>
-        `;
-        return;
-    }
-
+    console.log("Incident report query error:", error);
     console.log("Incident reports returned:", data);
-    console.log("Number of reports:", data ? data.length : 0);
+    console.log("Number of reports returned:", data?.length);
 
-    console.log("Department:", department);
-console.log("Returned data:", data);
-console.log("Returned row count:", data?.length);
-console.log("Query error:", error);
+    if (error) {
+        container.innerHTML =
+            "Could not load incident reports: " + error.message;
+        return;
+    }
 
-incidentReportsCache = data || [];
-
-if (data && data.length > 0) {
-    console.table(data.map(report => ({
-        id: report.id,
-        department: report.department,
-        manager_status: report.manager_status,
-        hr_status: report.hr_status
-    })));
-}
-
-renderIncidentQueue();
+    incidentReportsCache = data || [];
+    renderIncidentQueue();
 }
 
 
