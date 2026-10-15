@@ -2715,8 +2715,23 @@ console.log("Incident report error:", error);
     console.log("Incident reports returned:", data);
     console.log("Number of reports:", data ? data.length : 0);
 
-    incidentReportsCache = data || [];
-    renderIncidentQueue();
+    console.log("Department:", department);
+console.log("Returned data:", data);
+console.log("Returned row count:", data?.length);
+console.log("Query error:", error);
+
+incidentReportsCache = data || [];
+
+if (data && data.length > 0) {
+    console.table(data.map(report => ({
+        id: report.id,
+        department: report.department,
+        manager_status: report.manager_status,
+        hr_status: report.hr_status
+    })));
+}
+
+renderIncidentQueue();
 }
 
 
