@@ -2630,15 +2630,15 @@ let incidentReportsCache = [];
 let incidentQueueFilter = "Pending";
 
 
+
 async function loadIncidentQueue(){
     const container = document.getElementById("incidentQueue");
 
     if(!container || !currentUser) return;
 
-    // FIX: Get the department assigned to the logged-in manager.
+    // Get the department for the logged-in manager.
     const department = getIncidentManagerDepartment();
 
-    // Debugging information
     console.log("Manager account:", currentUser);
     console.log("Department being searched:", department);
 
@@ -2664,7 +2664,6 @@ async function loadIncidentQueue(){
         .eq("department", department)
         .order("created_at", { ascending: false });
 
-    // Show database errors in the browser console.
     if(error){
         console.error("Incident report loading error:", error);
 
@@ -2677,18 +2676,13 @@ async function loadIncidentQueue(){
         return;
     }
 
-    // Show the number of reports returned by Supabase.
     console.log("Incident reports returned:", data);
     console.log("Number of reports:", data ? data.length : 0);
 
     incidentReportsCache = data || [];
+    renderIncidentQueue();
+}
 
-    renderIncidentQueue();
-}
-```
-    incidentReportsCache = data || [];
-    renderIncidentQueue();
-}
 
 function filterIncidentQueue(filter, button){
     incidentQueueFilter = filter;
