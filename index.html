@@ -1437,6 +1437,11 @@ const db = window.supabase.createClient(
 
 );
 
+db.auth.getSession().then(({ data, error }) => {
+    console.log("Supabase Auth session:", data.session);
+    console.log("Supabase Auth session error:", error);
+});
+
 
 /* =====================================================
    CURRENT USER
