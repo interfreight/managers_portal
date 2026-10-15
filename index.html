@@ -2633,7 +2633,8 @@ async function loadIncidentQueue(){
     const container = document.getElementById("incidentQueue");
     if(!container || !currentUser) return;
 
-    const department = getIncidentManagerDepartment();
+   console.log("Manager account:", currentUser);
+console.log("Department being searched:", department);
     if(!department){
         container.innerHTML = `<div class="empty-message">Your account is not mapped to a department manager role. Please ask IT to confirm your role and department.</div>`;
         return;
