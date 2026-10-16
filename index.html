@@ -2762,31 +2762,48 @@ function renderIncidentQueue(){
     }).join("");
 }
 
-async function approveIncidentReport(id){
-    if(!confirm("Approve this incident report and make it available to HR/Admin?")) return;
 
-    const comments = prompt("Manager comments / recommendations (optional):", "");
-    if(comments === null) return;
+async function approveIncidentReport(id) {
+    if (!confirm("Approve this incident report and forward it to HR/Admin?")) {
+        return;
+    }
 
-    const { error } = await db
+    const comments = prompt(
+        "Manager comments / recommendations (optional):",
+        ""
+    );
+
+    if (comments === null) return;
+
+    const { data, error } = await db
         .from("incident_reports")
         .update({
             manager_status: "Approved",
+            hr_status: "Waiting",
             manager_comments: comments.trim() || null,
             rejection_comment: null,
             updated_at: new Date().toISOString()
         })
         .eq("id", id)
-        .eq("manager_status", "Pending");
+        .eq("manager_status", "Pending")
+        .select("id");
 
-    if(error){
+    if (error) {
         alert("Could not approve report: " + error.message);
         return;
     }
 
-    alert("Incident report approved. HR/Admin can now review it, subject to Supabase permissions.");
+    if (!data || data.length === 0) {
+        alert("This report has already been processed or is no longer pending.");
+        await loadIncidentQueue();
+        return;
+    }
+
+    alert("Incident report approved and forwarded to HR/Admin.");
+
     await loadIncidentQueue();
 }
+
 
 async function rejectIncidentReport(id){
     const comment = prompt("Enter the reason for rejecting this incident report (required):", "");
