@@ -2779,39 +2779,37 @@ async function approveIncidentReport(id) {
         .from("incident_reports")
         .update({
             manager_status: "Approved",
-            hr_status: "Waiting",
+            hr_status: "Pending",
             manager_comments: comments.trim() || null,
             rejection_comment: null,
             updated_at: new Date().toISOString()
         })
         .eq("id", id)
-        .eq("manager_status", "Pending")
-        .select("id");
+        .or("manager_status.eq.Pending,manager_status.is.null")
+        .select();
 
     if (error) {
+        console.error("Approval error:", error);
         alert("Approval failed: " + error.message);
         return;
     }
 
     if (!data || data.length === 0) {
-        alert("This report has already been processed.");
+        alert("No record was updated. Please check the report status and database permissions.");
         await loadIncidentQueue();
         return;
     }
 
-    alert("Approved successfully! The report has been forwarded to HR.");
+    alert("Incident report approved and forwarded to HR!");
 
-    // Refresh the report list
-    await loadIncidentQueue();
+    // Refresh manager dashboard
+    await loadDashboard();
 
-    // Refresh the HR-related data if needed
 }
-
 async function rejectIncidentReport(id) {
 
     const comment = prompt(
-        "Enter the reason for rejecting this incident report:",
-        ""
+        "Enter the reason for rejecting this incident report:"
     );
 
     if (comment === null) return;
@@ -2829,23 +2827,25 @@ async function rejectIncidentReport(id) {
             updated_at: new Date().toISOString()
         })
         .eq("id", id)
-        .eq("manager_status", "Pending")
-        .select("id");
+        .or("manager_status.eq.Pending,manager_status.is.null")
+        .select();
 
     if (error) {
+        console.error("Rejection error:", error);
         alert("Rejection failed: " + error.message);
         return;
     }
 
     if (!data || data.length === 0) {
-        alert("This report has already been processed.");
+        alert("No record was updated. Please check the report status and database permissions.");
         await loadIncidentQueue();
         return;
     }
 
-    alert("Incident report rejected successfully.");
+    alert("Incident report rejected successfully!");
 
-    await loadIncidentQueue();
+    await loadDashboard();
+
 }
 
 async function printIncidentReport(id){
