@@ -2762,9 +2762,9 @@ function renderIncidentQueue(){
     }).join("");
 }
 
-
 async function approveIncidentReport(id) {
-    if (!confirm("Approve this incident report and forward it to HR/Admin?")) {
+
+    if (!confirm("Approve this incident report and forward it to HR?")) {
         return;
     }
 
@@ -2789,31 +2789,39 @@ async function approveIncidentReport(id) {
         .select("id");
 
     if (error) {
-        alert("Could not approve report: " + error.message);
+        alert("Approval failed: " + error.message);
         return;
     }
 
     if (!data || data.length === 0) {
-        alert("This report has already been processed or is no longer pending.");
+        alert("This report has already been processed.");
         await loadIncidentQueue();
         return;
     }
 
-    alert("Incident report approved and forwarded to HR/Admin.");
+    alert("Approved successfully! The report has been forwarded to HR.");
 
+    // Refresh the report list
     await loadIncidentQueue();
+
+    // Refresh the HR-related data if needed
 }
 
+async function rejectIncidentReport(id) {
 
-async function rejectIncidentReport(id){
-    const comment = prompt("Enter the reason for rejecting this incident report (required):", "");
-    if(comment === null) return;
-    if(!comment.trim()){
+    const comment = prompt(
+        "Enter the reason for rejecting this incident report:",
+        ""
+    );
+
+    if (comment === null) return;
+
+    if (!comment.trim()) {
         alert("A rejection comment is required.");
         return;
     }
 
-    const { error } = await db
+    const { data, error } = await db
         .from("incident_reports")
         .update({
             manager_status: "Rejected",
@@ -2821,14 +2829,22 @@ async function rejectIncidentReport(id){
             updated_at: new Date().toISOString()
         })
         .eq("id", id)
-        .eq("manager_status", "Pending");
+        .eq("manager_status", "Pending")
+        .select("id");
 
-    if(error){
-        alert("Could not reject report: " + error.message);
+    if (error) {
+        alert("Rejection failed: " + error.message);
         return;
     }
 
-    alert("Incident report rejected. The rejection comment has been saved.");
+    if (!data || data.length === 0) {
+        alert("This report has already been processed.");
+        await loadIncidentQueue();
+        return;
+    }
+
+    alert("Incident report rejected successfully.");
+
     await loadIncidentQueue();
 }
 
