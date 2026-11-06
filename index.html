@@ -2779,7 +2779,7 @@ async function approveIncidentReport(id) {
         .from("incident_reports")
         .update({
             manager_status: "Approved",
-            hr_status: "Pending",
+           hr_status: "Waiting",
             manager_comments: comments.trim() || null,
             rejection_comment: null,
             updated_at: new Date().toISOString()
