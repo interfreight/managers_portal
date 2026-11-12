@@ -1374,7 +1374,7 @@ body{
         <div class="card queue-card">
 
             <h3>
-                ⏰ Overtime Approval Queue
+                ⏰ Overtime Approval & Completion Queue
             </h3>
 
             <div
@@ -2056,27 +2056,15 @@ async function loadLeaveQueue(){
         .trim();
 
 
-    const {
-        data,
-        error
-    } = await db
-
-        .from("employee_leaves")
-
-        .select("*")
-
-        .eq(
-            "approver_role",
-            managerRole
-        )
-
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
-        );
-
+   const {
+    data,
+    error
+} = await db
+    .from("employee_leaves")
+    .select("*")
+    .eq("approver_role", managerRole)
+    .eq("status", "Pending")
+    .order("created_at", { ascending: false });
 
     if(error){
 
@@ -2268,319 +2256,138 @@ async function loadLeaveQueue(){
 
 
 /* =====================================================
-   LOAD OVERTIME QUEUE
+   OVERTIME APPROVAL + COMPLETION QUEUE
+   Initial approval: department_status = Pending
+   Final approval: department_status = Approved AND
+                   final_manager_status = Pending
 ===================================================== */
 
-async function loadOvertimeQueue(){
-
-    const container =
-        document.getElementById(
-            "overtimeQueue"
-        );
-
-
-    container.innerHTML =
-
-        `<div class="loading-message">
-            Loading overtime requests...
-        </div>`;
-
-
-    const managerRole =
-        (
-            currentUser.role || ""
-        )
-        .toUpperCase()
-        .trim();
-
-
-    const {
-        data,
-        error
-    } = await db
-
-        .from("employee_overtime")
-
-        .select("*")
-
-        .eq(
-            "approver_role",
-            managerRole
-        )
-
-        .order(
-            "created_at",
-            {
-                ascending:false
-            }
-        );
-
-
-    if(error){
-
-        console.error(error);
-
-        container.innerHTML =
-
-            `<div class="empty-message">
-                ${error.message}
-            </div>`;
-
-        return;
-
-    }
-
-
-    if(!data || data.length === 0){
-
-        container.innerHTML =
-
-            `<div class="empty-message">
-                No overtime requests found.
-            </div>`;
-
-        return;
-
-    }
-
-
-    container.innerHTML = "";
-
-
-    data.forEach(
-        ot => {
-
-
-            let buttons = "";
-
-
-            if(
-                ot.department_status === "Pending"
-            ){
-
-                buttons = `
-
-                    <button
-                        class="btn btn-approve"
-                        onclick="approveOT('${ot.id}')">
-
-                        ✓ Approve
-
-                    </button>
-
-
-                    <button
-                        class="btn btn-reject"
-                        onclick="rejectOT('${ot.id}')">
-
-                        ✕ Reject
-
-                    </button>
-
-                `;
-
-            }
-
-
-            const attachment =
-
-                ot.attachment
-
-                ?
-
-                `
-
-                    <a
-                        href="${ot.attachment}"
-                        target="_blank"
-                        class="attachment-link">
-
-                        📎 View Attachment
-
-                    </a>
-
-                `
-
-                :
-
-                `<span style="color:#777;">
-                    No attachment
-                </span>`;
-
-
-            container.innerHTML += `
-
-                <div class="request">
-
-
-                    <!-- HEADER -->
-
-                    <div class="request-header">
-
-                        <div>
-
-                            <div class="request-name">
-
-                                ${ot.employee_name || "-"}
-
-                            </div>
-
-                            <div class="request-subtitle">
-
-                                ${ot.department || "-"}
-                                •
-                                ${ot.position || "-"}
-
-                            </div>
-
-                        </div>
-
-
-                        <span
-                            class="status-badge
-                            ${getStatusClass(
-                                ot.department_status
-                            )}">
-
-                            ${ot.department_status || "Pending"}
-
-                        </span>
-
-                    </div>
-
-
-                    <!-- INFORMATION -->
-
-                    <div class="request-grid">
-
-
-                        <div class="request-item">
-
-                            <span class="request-label">
-                                Date
-                            </span>
-
-                            <strong>
-                                ${ot.overtime_date || "-"}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="request-item">
-
-                            <span class="request-label">
-                                End Date
-                            </span>
-
-                            <strong>
-                                ${ot.overtime_end_date || "-"}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="request-item">
-
-                            <span class="request-label">
-                                Time
-                            </span>
-
-                            <strong>
-                                ${ot.time_in || "-"}
-                                -
-                                ${ot.time_out || "-"}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="request-item">
-
-                            <span class="request-label">
-                                Hours
-                            </span>
-
-                            <strong>
-                                ${ot.total_hours || 0} hrs
-                            </strong>
-
-                        </div>
-
-
-                        <div class="request-item">
-
-                            <span class="request-label">
-                                Department
-                            </span>
-
-                            <strong>
-                                ${ot.department || "-"}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="request-item">
-
-                            <span class="request-label">
-                                Position
-                            </span>
-
-                            <strong>
-                                ${ot.position || "-"}
-                            </strong>
-
-                        </div>
-
-
-                        <div class="request-item reason-box">
-
-                            <span class="request-label">
-                                Reason
-                            </span>
-
-                            <p>
-                                ${ot.reason || "-"}
-                            </p>
-
-                        </div>
-
-
-                        <div class="request-item attachment-box">
-
-                            <span class="request-label">
-                                Attachment
-                            </span>
-
-                            ${attachment}
-
-                        </div>
-
-
-                    </div>
-
-
-                    ${
-                        buttons
-                        ?
-                        `
-                        <div class="request-actions">
-                            ${buttons}
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-
+function safeHTML(value){
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+    })[char]);
+}
+
+function overtimeAttachment(url, label){
+    if(!url) return `<span style="color:#777;">No attachment</span>`;
+    const safeUrl = safeHTML(url);
+    return `<a class="attachment-link" href="${safeUrl}" target="_blank" rel="noopener">${label}</a>`;
+}
+
+function renderInitialOTCard(ot){
+    const id = safeHTML(ot.id);
+    return `
+        <div class="request">
+            <div class="request-header">
+                <div>
+                    <div class="request-name">${safeHTML(ot.employee_name || "-")}</div>
+                    <div class="request-subtitle">${safeHTML(ot.department || "-")} • ${safeHTML(ot.position || "-")}</div>
                 </div>
+                <span class="status-badge status-pending">Pending Initial Approval</span>
+            </div>
+            <div class="request-grid">
+                <div class="request-item"><span class="request-label">Date</span><strong>${safeHTML(ot.overtime_date || "-")}</strong></div>
+                <div class="request-item"><span class="request-label">End Date</span><strong>${safeHTML(ot.overtime_end_date || "-")}</strong></div>
+                <div class="request-item"><span class="request-label">Requested Time</span><strong>${safeHTML(ot.time_in || "-")} - ${safeHTML(ot.time_out || "-")}</strong></div>
+                <div class="request-item"><span class="request-label">Requested Hours</span><strong>${safeHTML(ot.total_hours ?? 0)} hrs</strong></div>
+                <div class="request-item"><span class="request-label">Department</span><strong>${safeHTML(ot.department || "-")}</strong></div>
+                <div class="request-item"><span class="request-label">Position</span><strong>${safeHTML(ot.position || "-")}</strong></div>
+                <div class="request-item reason-box"><span class="request-label">Reason</span><p>${safeHTML(ot.reason || "-")}</p></div>
+                <div class="request-item attachment-box"><span class="request-label">Attachment</span>${overtimeAttachment(ot.attachment, "📎 View Attachment")}</div>
+            </div>
+            <div class="request-actions">
+                <button class="btn btn-approve" onclick="approveOT('${id}')">✓ Approve Request</button>
+                <button class="btn btn-reject" onclick="rejectOT('${id}')">✕ Reject Request</button>
+            </div>
+        </div>`;
+}
 
-            `;
+function renderFinalOTCard(ot){
+    const id = safeHTML(ot.id);
+    const actualHours = Number(ot.actual_total_hours || 0);
+    return `
+        <div class="request">
+            <div class="request-header">
+                <div>
+                    <div class="request-name">${safeHTML(ot.employee_name || "-")}</div>
+                    <div class="request-subtitle">${safeHTML(ot.department || "-")} • ${safeHTML(ot.position || "-")}</div>
+                </div>
+                <span class="status-badge status-pending">Pending Final Approval</span>
+            </div>
+            <div class="request-grid">
+                <div class="request-item"><span class="request-label">Actual Date From</span><strong>${safeHTML(ot.actual_overtime_date || ot.overtime_date || "-")}</strong></div>
+                <div class="request-item"><span class="request-label">Actual Date To</span><strong>${safeHTML(ot.actual_overtime_end_date || ot.overtime_end_date || "-")}</strong></div>
+                <div class="request-item"><span class="request-label">Actual Time</span><strong>${safeHTML(ot.actual_time_in || "-")} - ${safeHTML(ot.actual_time_out || "-")}</strong></div>
+                <div class="request-item"><span class="request-label">Actual Total Hours</span><strong>${actualHours.toFixed(2)} hrs</strong></div>
+                <div class="request-item"><span class="request-label">Requested Hours</span><strong>${safeHTML(ot.total_hours ?? 0)} hrs</strong></div>
+                <div class="request-item"><span class="request-label">Department</span><strong>${safeHTML(ot.department || "-")}</strong></div>
+                <div class="request-item reason-box"><span class="request-label">Employee Accomplishment Report</span><p class="incident-description">${safeHTML(ot.completion_report || "No accomplishment report submitted.")}</p></div>
+                <div class="request-item attachment-box"><span class="request-label">Completion Attachment</span>${overtimeAttachment(ot.completion_attachment, "📎 View Completion Attachment")}</div>
+            </div>
+            <div class="request-item" style="margin-bottom:15px;">
+                <label class="request-label" for="actual-break-${id}">Manager-Verified Break (minutes)</label>
+                <input id="actual-break-${id}" type="number" min="0" step="1" value="${safeHTML(ot.actual_break_minutes ?? 0)}"
+                    style="width:100%;padding:11px;border:1px solid #d9e2ec;border-radius:9px;font:inherit;">
+                <small style="display:block;color:#66758a;margin-top:6px;">Enter the break duration to deduct from the employee's actual total hours. Enter 0 if there was no break.</small>
+            </div>
+            <div class="request-item" style="margin-bottom:15px;">
+                <label class="request-label" for="final-remarks-${id}">Manager Remarks (optional)</label>
+                <textarea id="final-remarks-${id}" rows="2" style="width:100%;padding:11px;border:1px solid #d9e2ec;border-radius:9px;font:inherit;resize:vertical;">${safeHTML(ot.final_manager_remarks || "")}</textarea>
+            </div>
+            <div class="request-actions">
+                <button class="btn btn-approve" onclick="finalApproveOT('${id}')">✓ Final Approve</button>
+                <button class="btn btn-reject" onclick="rejectFinalOT('${id}')">✕ Reject Completion</button>
+            </div>
+        </div>`;
+}
 
-        }
-    );
+async function loadOvertimeQueue(){
+    const container = document.getElementById("overtimeQueue");
+    if(!container || !currentUser) return;
 
+    container.innerHTML = `<div class="loading-message">Loading overtime requests...</div>`;
+
+    const managerRole = String(currentUser.role || "").toUpperCase().trim();
+
+    const [initialResult, finalResult] = await Promise.all([
+        db.from("employee_overtime")
+            .select("*")
+            .eq("approver_role", managerRole)
+            .eq("department_status", "Pending")
+            .order("created_at", {ascending:false}),
+        db.from("employee_overtime")
+            .select("*")
+            .eq("approver_role", managerRole)
+            .eq("department_status", "Approved")
+            .eq("final_manager_status", "Pending")
+            .order("created_at", {ascending:false})
+    ]);
+
+    if(initialResult.error || finalResult.error){
+        const error = initialResult.error || finalResult.error;
+        console.error("Overtime queue error:", error);
+        container.innerHTML = `<div class="empty-message">Could not load overtime queue: ${safeHTML(error.message)}</div>`;
+        return;
+    }
+
+    const initialRequests = initialResult.data || [];
+    const completionRequests = finalResult.data || [];
+
+    if(initialRequests.length === 0 && completionRequests.length === 0){
+        container.innerHTML = `<div class="empty-message">No overtime requests are waiting for approval.</div>`;
+        return;
+    }
+
+    let html = "";
+    if(initialRequests.length){
+        html += `<h4 style="color:#003366;margin:0 0 12px;">Initial Approval (${initialRequests.length})</h4>`;
+        html += initialRequests.map(renderInitialOTCard).join("");
+    }
+    if(completionRequests.length){
+        html += `<h4 style="color:#003366;margin:22px 0 12px;">Completion / Final Approval (${completionRequests.length})</h4>`;
+        html += completionRequests.map(renderFinalOTCard).join("");
+    }
+    container.innerHTML = html;
 }
 
 
@@ -3175,130 +2982,173 @@ async function rejectLeave(id){
 
 
 /* =====================================================
-   APPROVE OVERTIME
+   INITIAL OVERTIME APPROVAL
 ===================================================== */
 
 async function approveOT(id){
+    if(!confirm("Approve this overtime request? The employee can submit the actual completion after approval.")) return;
 
-    if(
-        !confirm(
-            "Approve this overtime request?"
-        )
-    ){
-        return;
-    }
-
-
-    const {
-        error
-    } = await db
-
+    const {data: request, error: getError} = await db
         .from("employee_overtime")
+        .select("id,department_status,approver_role")
+        .eq("id", id)
+        .maybeSingle();
 
-        .update({
-
-            department_status:
-                "Approved",
-
-            department_approved_by:
-                currentUser.full_name,
-
-            department_approved_date:
-                new Date().toISOString(),
-
-            hr_status:
-                "Pending"
-
-        })
-
-        .eq(
-            "id",
-            id
-        );
-
-
-    if(error){
-
-        alert(
-            error.message
-        );
-
+    if(getError){ alert(getError.message); return; }
+    if(!request || request.department_status !== "Pending"){
+        alert("This request is no longer pending initial approval. Please refresh the page.");
+        await loadDashboard();
         return;
-
     }
 
+    const {error} = await db
+        .from("employee_overtime")
+        .update({
+            department_status: "Approved",
+            department_approved_by: currentUser.full_name,
+            department_approved_date: new Date().toISOString()
+        })
+        .eq("id", id)
+        .eq("department_status", "Pending");
 
-    alert(
-        "Overtime request approved."
-    );
+    if(error){ alert(error.message); return; }
 
-
+    alert("Overtime request approved. The employee can now submit the actual overtime completion.");
     await loadDashboard();
-
 }
 
 
 /* =====================================================
-   REJECT OVERTIME
+   INITIAL OVERTIME REJECTION
 ===================================================== */
 
 async function rejectOT(id){
+    if(!confirm("Reject this overtime request?")) return;
 
-    if(
-        !confirm(
-            "Reject this overtime request?"
-        )
-    ){
+    const {error} = await db
+        .from("employee_overtime")
+        .update({
+            department_status: "Rejected",
+            department_approved_by: currentUser.full_name,
+            department_approved_date: new Date().toISOString(),
+            hr_status: "Rejected"
+        })
+        .eq("id", id)
+        .eq("department_status", "Pending");
+
+    if(error){ alert(error.message); return; }
+
+    alert("Overtime request rejected.");
+    await loadDashboard();
+}
+
+
+/* =====================================================
+   FINAL OVERTIME APPROVAL
+   Manager enters break minutes; employee cannot set it.
+===================================================== */
+
+async function finalApproveOT(id){
+    const breakInput = document.getElementById(`actual-break-${id}`);
+    const remarksInput = document.getElementById(`final-remarks-${id}`);
+    const breakMinutes = Number(breakInput?.value);
+
+    if(!Number.isInteger(breakMinutes) || breakMinutes < 0){
+        alert("Please enter a valid break duration in whole minutes. Enter 0 if there was no break.");
         return;
     }
 
-
-    const {
-        error
-    } = await db
-
+    const {data: request, error: getError} = await db
         .from("employee_overtime")
+        .select("*")
+        .eq("id", id)
+        .eq("department_status", "Approved")
+        .eq("final_manager_status", "Pending")
+        .maybeSingle();
 
+    if(getError){ alert(getError.message); return; }
+    if(!request){
+        alert("This completion is no longer pending final approval. Please refresh the page.");
+        await loadDashboard();
+        return;
+    }
+
+    const actualHours = Number(request.actual_total_hours);
+    if(!Number.isFinite(actualHours) || actualHours <= 0){
+        alert("The employee's actual total hours are missing or invalid. Please ask the employee to correct the completion submission.");
+        return;
+    }
+
+    const breakHours = breakMinutes / 60;
+    if(breakHours > actualHours){
+        alert("Break minutes cannot be greater than the actual total overtime hours.");
+        return;
+    }
+
+    const netHours = Math.round((actualHours - breakHours) * 100) / 100;
+    const remarks = String(remarksInput?.value || "").trim();
+
+    if(!confirm(
+        `Final approve this overtime completion?\n\nActual hours: ${actualHours.toFixed(2)}\nBreak deduction: ${breakMinutes} minute(s)\nNet overtime: ${netHours.toFixed(2)} hours`
+    )) return;
+
+    const {error} = await db
+        .from("employee_overtime")
         .update({
-
-            department_status:
-                "Rejected",
-
-            department_approved_by:
-                currentUser.full_name,
-
-            department_approved_date:
-                new Date().toISOString(),
-
-            hr_status:
-                "Rejected"
-
+            actual_break_minutes: breakMinutes,
+            actual_net_hours: netHours,
+            final_manager_status: "Approved",
+            final_manager_approved_by: currentUser.full_name,
+            final_manager_approved_date: new Date().toISOString(),
+            final_manager_remarks: remarks || null,
+            hr_status: "Pending"
         })
-
-        .eq(
-            "id",
-            id
-        );
-
+        .eq("id", id)
+        .eq("department_status", "Approved")
+        .eq("final_manager_status", "Pending");
 
     if(error){
-
-        alert(
-            error.message
-        );
-
+        console.error("Final overtime approval error:", error);
+        alert(error.message);
         return;
-
     }
 
-
-    alert(
-        "Overtime request rejected."
-    );
-
-
+    alert(`Overtime completion finally approved.\n\nActual total: ${actualHours.toFixed(2)} hours\nBreak deducted: ${breakMinutes} minutes\nNet overtime: ${netHours.toFixed(2)} hours\n\nThe record has been moved out of this approval queue and is now pending HR review.`);
     await loadDashboard();
+}
 
+
+/* =====================================================
+   FINAL OVERTIME COMPLETION REJECTION
+===================================================== */
+
+async function rejectFinalOT(id){
+    const remarks = prompt("Enter the reason for rejecting this overtime completion:");
+    if(remarks === null) return;
+    if(!remarks.trim()){
+        alert("A rejection reason is required.");
+        return;
+    }
+
+    if(!confirm("Reject this overtime completion?")) return;
+
+    const {error} = await db
+        .from("employee_overtime")
+        .update({
+            final_manager_status: "Rejected",
+            final_manager_approved_by: currentUser.full_name,
+            final_manager_approved_date: new Date().toISOString(),
+            final_manager_remarks: remarks.trim(),
+            hr_status: "Rejected"
+        })
+        .eq("id", id)
+        .eq("department_status", "Approved")
+        .eq("final_manager_status", "Pending");
+
+    if(error){ alert(error.message); return; }
+
+    alert("Overtime completion rejected.");
+    await loadDashboard();
 }
 
 
